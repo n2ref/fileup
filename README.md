@@ -18,7 +18,6 @@ Supports multiple file selection, drag&drop and progress bar for jQuery.
 - onAbort (file_number, file)
 - onTimeout (file_number, file)
 - onFinish (file_number, file)
-- onSuccessSystem (file_number, file)
 - onDragEnter (event)
 - onDragOver (event)
 - onDragLeave (event)
@@ -27,6 +26,7 @@ Supports multiple file selection, drag&drop and progress bar for jQuery.
 System events
 
 - onStartSystem (file_number, file)
+- onSuccessSystem (file_number, file)
 - onErrorSystem (event, file, file_number)
 - onAbortSystem (file_number, file)
 - onTimeoutSystem (file_number, file)

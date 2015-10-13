@@ -1,5 +1,5 @@
 # uploadH5
-Upload HTML 5 a library for uploading files to the server.  
+Upload HTML 5 is a library for uploading files to the server.  
 Supports multiple file selection, drag&drop and progress bar for jQuery.
 
 ![Interface](https://dl.dropboxusercontent.com/u/31670130/img/uploadh5.png)

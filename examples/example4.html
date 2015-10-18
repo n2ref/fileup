@@ -59,30 +59,30 @@
             inputID: 'upload-xxx',
             queueID: 'upload-xxx-queue',
             dropzoneID: 'upload-xxx-dropzone',
-            lang: 'en',
-            onSelect: function(file) {
-                $('.control-button').show();
-            },
-            onRemove: function(file, total) {
-                if (file == '*' || total == 1) {
-                    $('.control-button').hide();
-                }
-            },
-            onSuccess: function(response, file_number, file) {
-                alert('Upload ' + file.name + ' success!');
-            },
-            onError: function(event, file, file_number) {
-                alert('Error!');
-            },
-            onDragEnter: function(event) {
-                $(event.target).addClass('over');
-            },
-            onDragLeave: function(event) {
-                $(event.target).removeClass('over');
-            },
-            onDragEnd: function(event) {
-                $(event.target).removeClass('over');
+            lang: 'en'
+        })
+        .select(function(file) {
+            $('.control-button').show();
+        })
+        .remove(function(file, total) {
+            if (file == '*' || total == 1) {
+                $('.control-button').hide();
             }
+        })
+        .success(function(response, file_number, file) {
+            alert('Upload ' + file.name + ' success!');
+        })
+        .error(function(event, file, file_number) {
+            alert('Error!');
+        })
+        .dragEnter(function(event) {
+            $(event.target).addClass('over');
+        })
+        .dragLeave(function(event) {
+            $(event.target).removeClass('over');
+        })
+        .dragEnd(function(event) {
+            $(event.target).removeClass('over');
         });
     });
 </script>

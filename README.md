@@ -1,4 +1,4 @@
-# uploadH5
+# UploadH5
 Upload HTML 5 is a library for uploading files to the server.  
 Supports multiple file selection, drag&drop and progress bar for jQuery.
 

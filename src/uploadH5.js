@@ -1,5 +1,5 @@
 (function($){
-    var options = {
+    var default_options = {
         url: window.location.pathname + window.location.search,
         inputID: '',
         queueID: '',
@@ -32,20 +32,13 @@
                           '</div>' +
                           '<div class="clear"></div>' +
                       '</div>',
-        onSelect: function(file) {
-
-        },
-        onRemove: function(file_number, total, file) {
-
-        },
-        onBeforeStart: function(file_number, xhr, file) {
-
-        },
-        onStart: function(file_number, file) {
-
-        },
+        onSelect: function(file) {},
+        onRemove: function(file_number, total, file) {},
+        onBeforeStart: function(file_number, xhr, file) {},
+        onStart: function(file_number, file) {},
         onStartSystem: function(file_number, file) {
-            var $file = $('#file-' + options.inputID + '-' + file_number);
+            var options = this.uploadH5.options;
+            var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .upload').hide();
             $file.find('.controls .abort').show();
             $file.find('.result')
@@ -55,17 +48,15 @@
         },
         onProgress: function(file_number, ProgressEvent, file) {
             if (event.lengthComputable) {
+                var options = this.uploadH5.options;
                 var percent = Math.ceil(ProgressEvent.loaded / ProgressEvent.total * 100);
                 $('#file-' + options.inputID + '-' + file_number + ' .uploadH5-progress-bar').css('width', percent + "%");
             }
         },
-        onSuccess: function(file_number, response, file) {
-
-        },
-        onError: function(event, file, file_number, response) {
-
-        },
+        onSuccess: function(file_number, response, file) {},
+        onError: function(event, file, file_number, response) {},
         onErrorSystem: function(event, file, file_number) {
+            var options = this.uploadH5.options;
             switch(event) {
                 case 'files_limit':
                     var message = i18n[options.lang].errorFilesLimit;
@@ -99,11 +90,10 @@
                     break;
             }
         },
-        onAbort: function(file_number, file) {
-
-        },
+        onAbort: function(file_number, file) {},
         onAbortSystem: function(file_number, file) {
-            var $file = $('#file-' + options.inputID + '-' + file_number);
+            var options = this.uploadH5.options;
+            var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').show();
             $file.find('.result')
@@ -111,11 +101,10 @@
                 .removeClass('success')
                 .text('');
         },
-        onTimeout: function(file_number, file) {
-
-        },
+        onTimeout: function(file_number, file) {},
         onTimeoutSystem: function(file_number, file) {
-            var $file = $('#file-' + options.inputID + '-' + file_number);
+            var options = this.uploadH5.options;
+            var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').show();
             $file.find('.result')
@@ -123,11 +112,10 @@
                 .removeClass('success')
                 .text('');
         },
-        onFinish: function(file_number, file) {
-
-        },
-        onSuccessSystem: function(file_number, file) {
-            var $file = $('#file-' + options.inputID + '-' + file_number);
+        onFinish: function(file_number, file) {},
+        onSuccessSystem: function(response, file_number, file) {
+            var options = this.uploadH5.options;
+            var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').hide();
             $file.find('.result')
@@ -140,18 +128,70 @@
             event.preventDefault();
             event.dataTransfer.dropEffect = 'copy';
         },
-        onDragLeave: function(event) {
-
-        },
-        onDragEnd: function(event) {
-
-        },
+        onDragLeave: function(event) {},
+        onDragEnd: function(event) {},
         onDragEnter: function(event) {
             event.stopPropagation();
             event.preventDefault();
             event.dataTransfer.dropEffect = 'copy';
         }
     };
+
+
+    var events = {
+        addEvent : function(input, name, callback) {
+            var stack = input.uploadH5.events[name] || [];
+            stack.push(callback);
+            input.uploadH5.events[name] = stack;
+        },
+        removeEvents : function(input, name) {
+            input.uploadH5.events[name] = [];
+        },
+        callEvent : function(input, name, args) {
+            var result = true,
+                event_result;
+
+            if (input.uploadH5.events[name]) {
+                for (var i = 0; i < input.uploadH5.events[name].length; i++) {
+                    if (typeof input.uploadH5.events[name][i] === 'function') {
+                        if (args) {
+                            event_result = input.uploadH5.events[name][i].apply(input, args);
+                            if (result && event_result === false) {
+                                result = false;
+                            }
+                        } else {
+                            event_result = input.uploadH5.events[name][i].apply(input);
+                            if (result && event_result === false) {
+                                result = false;
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return result;
+        }
+    };
+
+
+    var eventRegister = {
+        input :       {},
+        select :      function(callback) {events.addEvent(eventRegister.input, 'select',      callback); return eventRegister;},
+        remove :      function(callback) {events.addEvent(eventRegister.input, 'remove',      callback); return eventRegister;},
+        beforeStart : function(callback) {events.addEvent(eventRegister.input, 'beforeStart', callback); return eventRegister;},
+        start :       function(callback) {events.addEvent(eventRegister.input, 'start',       callback); return eventRegister;},
+        progress :    function(callback) {events.addEvent(eventRegister.input, 'progress',    callback); return eventRegister;},
+        success :     function(callback) {events.addEvent(eventRegister.input, 'success',     callback); return eventRegister;},
+        error :       function(callback) {events.addEvent(eventRegister.input, 'error',       callback); return eventRegister;},
+        abort :       function(callback) {events.addEvent(eventRegister.input, 'abort',       callback); return eventRegister;},
+        timeout :     function(callback) {events.addEvent(eventRegister.input, 'timeout',     callback); return eventRegister;},
+        dragOver :    function(callback) {events.addEvent(eventRegister.input, 'dragOver',    callback); return eventRegister;},
+        dragLeave :   function(callback) {events.addEvent(eventRegister.input, 'dragLeave',   callback); return eventRegister;},
+        dragEnd :     function(callback) {events.addEvent(eventRegister.input, 'dragEnd',     callback); return eventRegister;},
+        dragEnter :   function(callback) {events.addEvent(eventRegister.input, 'dragEnter',   callback); return eventRegister;}
+    };
+
 
     var i18n = {
         ru: {
@@ -178,20 +218,29 @@
         }
     };
 
+
     /**
      * Init uploadH5
-     * @return {mixed}
+     * @param {object} param1
      */
-    function init() {
+    function init(param1) {
 
-        var input = document.getElementById(options.inputID);
+        var options = $.extend(false, default_options, param1);
+        var input   = document.getElementById(options.inputID);
+
         if (input && input.type === 'file') {
             if (options.dropzoneID) {
                 var dropZone = document.getElementById(options.dropzoneID);
                 if (dropZone) {
-                    dropZone.addEventListener('dragover',  options.onDragOver);
-                    dropZone.addEventListener('dragleave', options.onDragLeave);
-                    dropZone.addEventListener('dragenter', options.onDragEnter);
+                    dropZone.addEventListener('dragover',  function(event) {
+                        events.callEvent(input, 'dragOver', [event]);
+                    });
+                    dropZone.addEventListener('dragleave', function(event) {
+                        events.callEvent(input, 'dragLeave', [event]);
+                    });
+                    dropZone.addEventListener('dragenter', function(event) {
+                        events.callEvent(input, 'dragEnter', [event]);
+                    });
                     dropZone.addEventListener('drop',      dropFiles);
                     dropZone.uploadH5 = {
                         input: input
@@ -201,11 +250,32 @@
 
             input.uploadH5 = {
                 files: {},
-                nextID: 0
+                nextID: 0,
+                options: options,
+                events: {}
             };
+
+            events.addEvent(input, 'select',      options.onSelect);
+            events.addEvent(input, 'remove',      options.onRemove);
+            events.addEvent(input, 'beforeStart', options.onBeforeStart);
+            events.addEvent(input, 'start',       options.onStartSystem);
+            events.addEvent(input, 'start',       options.onStart);
+            events.addEvent(input, 'progress',    options.onProgress);
+            events.addEvent(input, 'success',     options.onSuccessSystem);
+            events.addEvent(input, 'success',     options.onSuccess);
+            events.addEvent(input, 'error',       options.onErrorSystem);
+            events.addEvent(input, 'error',       options.onError);
+            events.addEvent(input, 'abort',       options.onAbortSystem);
+            events.addEvent(input, 'abort',       options.onAbort);
+            events.addEvent(input, 'timeout',     options.onTimeoutSystem);
+            events.addEvent(input, 'timeout',     options.onTimeout);
+            events.addEvent(input, 'dragOver',    options.onDragOver);
+            events.addEvent(input, 'dragLeave',   options.onDragLeave);
+            events.addEvent(input, 'dragEnd',     options.onDragEnd);
+            events.addEvent(input, 'dragEnter',   options.onDragEnter);
+
             $(input).on('change', appendFiles);
         }
-
     }
 
 
@@ -217,24 +287,24 @@
         event.preventDefault();
         event.stopPropagation();
 
-        var files = event.target.files || event.dataTransfer.files;
+        var input   = event.target.uploadH5.input;
+        var options = input.uploadH5.options;
+        var files   = event.target.files || event.dataTransfer.files;
 
         if (files.length) {
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
 
                 if (options.sizeLimit > 0 && getFileSize(file) > options.sizeLimit) {
-                    options.onErrorSystem('size_limit', file);
-                    options.onError('size_limit', file);
+                    events.callEvent(input, 'error', ['size_limit', file]);
                     continue;
                 }
-                if (options.filesLimit > 0 && Object.keys(this.uploadH5.files).length >= options.filesLimit) {
-                    options.onErrorSystem('files_limit', file);
-                    options.onError('files_limit', file);
+                if (options.filesLimit > 0 && Object.keys(files).length >= options.filesLimit) {
+                    events.callEvent(input, 'error', ['files_limit', file]);
                     break;
                 }
-                if (typeof event.target.uploadH5.input.accept === 'string') {
-                    var accept = event.target.uploadH5.input.accept;
+                if (typeof input.accept === 'string') {
+                    var accept = input.accept;
                     if (accept && /[^\w]+/.test(accept)) {
                         var is_accept = false;
                         var types = accept.split(',');
@@ -250,23 +320,23 @@
                             }
                         }
                         if ( ! is_accept) {
-                            options.onErrorSystem('file_type', file);
-                            options.onError('file_type', file);
+                            events.callEvent(input, 'error', ['file_type', file]);
                             continue;
                         }
                     }
                 }
-                if (options.onSelect(file) === false) {
+
+                if (events.callEvent(input, 'select', [file]) === false) {
                     continue;
                 }
 
-                appendFile(file, event.target.uploadH5.input);
+                appendFile(file, input);
             }
 
-            $(event.target.uploadH5.input).val('');
+            $(input).val('');
         }
 
-        options.onDragEnd(event);
+        events.callEvent(input, 'dragEnd', [event]);
     }
 
 
@@ -276,6 +346,7 @@
     function appendFiles() {
 
         if (this.files.length) {
+            var options  = this.uploadH5.options;
             var multiple = $(this).is("[multiple]");
 
             if ( ! multiple) {
@@ -287,13 +358,11 @@
                 var file = this.files[i];
 
                 if (options.sizeLimit > 0 && getFileSize(file) > options.sizeLimit) {
-                    options.onErrorSystem('size_limit', file);
-                    options.onError('size_limit', file);
+                    events.callEvent(this, 'error', ['size_limit', file]);
                     continue;
                 }
                 if (options.filesLimit > 0 && Object.keys(this.uploadH5.files).length >= options.filesLimit) {
-                    options.onErrorSystem('files_limit', file);
-                    options.onError('files_limit', file);
+                    events.callEvent(this, 'error', ['files_limit', file]);
                     break;
                 }
                 if (typeof this.accept === 'string') {
@@ -313,13 +382,12 @@
                             }
                         }
                         if ( ! is_accept) {
-                            options.onErrorSystem('file_type', file);
-                            options.onError('file_type', file);
+                            events.callEvent(this, 'error', ['file_type', file]);
                             continue;
                         }
                     }
                 }
-                if (options.onSelect(file) === false) {
+                if (events.callEvent(this, 'select', [file]) === false) {
                     continue;
                 }
 
@@ -335,9 +403,11 @@
      * Append file in queue
      * @param {File}   file
      * @param {object} input
-     * @returns {string}
+     * @returns {bool|void}
      */
     function appendFile(file, input) {
+
+        var options = input.uploadH5.options;
 
         if (window.XMLHttpRequest) {
             var xhr = ("onload" in new XMLHttpRequest()) ? new XMLHttpRequest : new XDomainRequest;
@@ -348,14 +418,12 @@
                 try {
                     xhr = new ActiveXObject("Microsoft.XMLHTTP");
                 } catch (e) {
-                    options.onErrorSystem('old_browser', file);
-                    options.onError('old_browser', file);
+                    events.callEvent(input, 'error', ['old_browser', file]);
                     return false;
                 }
             }
         } else {
-            options.onErrorSystem('old_browser', file);
-            options.onError('old_browser', file);
+            events.callEvent(input, 'error', ['old_browser', file]);
             return false;
         }
 
@@ -391,7 +459,7 @@
                     $('#' + options.queueID).append(tpl);
 
                     if (options.autostart) {
-                        uploadFile(fileContainer);
+                        uploadFile(input, fileContainer);
                     }
                 };
                 reader.readAsDataURL(file);
@@ -402,7 +470,7 @@
                 $('#' + options.queueID).append(tpl);
 
                 if (options.autostart) {
-                    uploadFile(fileContainer);
+                    uploadFile(input, fileContainer);
                 }
             }
 
@@ -412,7 +480,7 @@
             $('#' + options.queueID).append(tpl);
 
             if (options.autostart) {
-                uploadFile(fileContainer);
+                uploadFile(input, fileContainer);
             }
         }
     }
@@ -463,11 +531,13 @@
 
     /**
      * Upload file
+     * @param {object} input
      * @param {object} fileContainer
      * @returns {boolean}
      */
-    function uploadFile(fileContainer) {
+    function uploadFile(input, fileContainer) {
 
+        var options     = input.uploadH5.options;
         var file_number = fileContainer.file_number;
         var file        = fileContainer.file;
         var xhr         = fileContainer.xhr;
@@ -479,13 +549,12 @@
         // запрос начат
         xhr.onloadstart = function() {
             fileContainer.status = 'loading';
-            options.onStartSystem(file_number, file);
-            options.onStart(file_number, file);
+            events.callEvent(input, 'start', [file_number, file]);
         };
 
         // браузер получил очередной пакет данных
         xhr.upload.onprogress = function(ProgressEvent) {
-            options.onProgress(file_number, ProgressEvent, file);
+            events.callEvent(input, 'progress', [file_number, ProgressEvent, file]);
         };
 
         // запрос был успешно (без ошибок) завершён
@@ -493,45 +562,41 @@
             fileContainer.status = 'loaded';
 
             if (xhr.status == 200) {
-                options.onSuccessSystem(file_number, file);
-                options.onSuccess(xhr.responseText, file_number, file);
+                events.callEvent(input, 'success', [xhr.responseText, file_number, file]);
             } else {
-                options.onErrorSystem('bad_status', file, file_number, xhr.responseText);
-                options.onError('bad_status', file, file_number, xhr.responseText);
+                events.callEvent(input, 'error', ['bad_status', file, file_number, xhr.responseText]);
             }
         };
 
         // запрос был завершён (успешно или неуспешно)
         xhr.onloadend = function() {
-            options.onFinish(file_number, file);
+            events.callEvent(input, 'finish', [file_number, file]);
         };
 
         // запрос был отменён вызовом xhr.abort()
         xhr.onabort = function() {
             fileContainer.status = 'stand_by';
-            options.onAbortSystem(file_number, file);
-            options.onAbort(file_number, file);
+            events.callEvent(input, 'abort', [file_number, file]);
         };
 
         // запрос был прекращён по таймауту
         xhr.ontimeout = function() {
             fileContainer.status = 'stand_by';
-            options.onTimeoutSystem(file_number, file);
-            options.onTimeout(file_number, file);
+            events.callEvent(input, 'timeout', [file_number, file]);
         };
 
         // произошла ошибка
         xhr.onerror = function(event) {
             fileContainer.status = 'stand_by';
-            options.onErrorSystem('error_load', file, file_number, event);
-            options.onError(event, file, file_number);
+            events.callEvent(input, 'error', ['error_load', file, file_number, event]);
         };
 
         xhr.open(options.method, options.url, true);
         xhr.setRequestHeader('Cache-Control',    'no-cache');
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-        options.onBeforeStart(xhr, file_number, file);
+
+        events.callEvent(input, 'beforeStart', [xhr, file_number, file]);
 
         if (window.FormData !== undefined) {
             var formData = new FormData();
@@ -561,12 +626,12 @@
                 if (file_number == '*') {
                     $.each(input.uploadH5.files, function(key, fileContainer) {
                         if (fileContainer.status == 'stand_by') {
-                            uploadFile(fileContainer);
+                            uploadFile(input, fileContainer);
                         }
                     });
 
                 } else if (typeof input.uploadH5.files[file_number] === 'object') {
-                    uploadFile(input.uploadH5.files[file_number]);
+                    uploadFile(input, input.uploadH5.files[file_number]);
                 }
             }
         },
@@ -575,10 +640,12 @@
             var input = document.getElementById(inputID);
 
             if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
-                var total = Object.keys(input.uploadH5.files).length;
+                var options = input.uploadH5.options;
+                var total   = Object.keys(input.uploadH5.files).length;
 
                 if (file_number == '*') {
-                    if (options.onRemove('*', total) === false) {
+
+                    if (events.callEvent(input, 'remove', ['*', total]) === false) {
                         return;
                     }
                     input.uploadH5.files = {};
@@ -587,14 +654,23 @@
                     });
 
                 } else if (typeof input.uploadH5.files[file_number] === 'object') {
-                    if (options.onRemove(input.uploadH5.files[file_number], total, file_number) === false) {
+                    if (events.callEvent(input, 'remove', [input.uploadH5.files[file_number], total, file_number]) === false) {
                         return;
                     }
+
                     delete input.uploadH5.files[file_number];
                     $('#file-' + inputID + '-' + file_number).fadeOut('fast', function(){
                         $(this).remove();
                     });
                 }
+            }
+        },
+
+        removeEvents: function(inputID, name) {
+            var input = document.getElementById(inputID);
+
+            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+                events.removeEvents(input, name);
             }
         },
 
@@ -619,18 +695,33 @@
      * @param {object|string} param1 Options, inputID
      * @param {string}        param2 Method name
      * @param {string|int}    param3 File number
-     * @returns {*}
+     * @returns {object}
      */
     $.uploadH5 = function(param1, param2, param3) {
         if ( typeof param1 === 'object' ) {
-            options = $.extend(options, param1);
-            return init();
+            init(param1);
+
+            var input = document.getElementById(param1.inputID);
+            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+                eventRegister.input = input;
+                return eventRegister;
+            }
 
         } else if ( typeof param1 === 'string' &&
             typeof param2 === 'string' &&
             typeof methods[param2] == 'function'
         ) {
-            return methods[param2](param1, param3);
+            methods[param2](param1, param3);
+
+        } else if ( typeof param1 === 'string' &&
+            typeof param2 === 'undefined' &&
+            typeof param3 === 'undefined'
+        ) {
+            var input = document.getElementById(param1);
+            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+                eventRegister.input = input;
+                return eventRegister;
+            }
 
         } else {
             $.error( 'Unknown method ' +  param1 );

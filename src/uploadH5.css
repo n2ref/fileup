@@ -41,10 +41,10 @@
     clear: both;
 }
 .uploadH5-file.doc .data {
-	margin-left: 42px;
+    margin-left: 42px;
 }
 .uploadH5-file.image .data {
-	margin-left: 90px;
+    margin-left: 90px;
 }
 .uploadH5-file .controls {
     margin-top: 5px;
@@ -73,7 +73,8 @@
     text-decoration: underline;
 }
 .uploadH5-file .data .description {
-	padding-right: 10px;
+    padding-right: 15px;
+    word-break: break-all;
 }
 .uploadH5-file .result.success {
     color: #4CAE4C;

@@ -350,8 +350,13 @@
             var multiple = $(this).is("[multiple]");
 
             if ( ! multiple) {
-                $('#' + options.queueID).empty();
-                this.uploadH5.files = {};
+                if (events.callEvent(this, 'remove', ['*', '1', this.files[0]])) {
+                    $('#' + options.queueID).empty();
+                    this.uploadH5.files = {};
+                } else {
+                    $(this).val('');
+                    return;
+                }
             }
 
             for (var i = 0; i < this.files.length; i++) {

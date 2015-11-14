@@ -76,6 +76,9 @@
     padding-right: 15px;
     word-break: break-all;
 }
+.uploadH5-file .data .file-size {
+    white-space: nowrap;
+}
 .uploadH5-file .result.success {
     color: #4CAE4C;
 }

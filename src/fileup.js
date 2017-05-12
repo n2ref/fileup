@@ -12,7 +12,7 @@
         method: 'post',
         timeout: null,
         autostart: false,
-        templateFile: '<div id="file-[INPUT_ID]-[FILE_NUM]" class="uploadH5-file [TYPE]">' +
+        templateFile: '<div id="file-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]">' +
                           '<div class="preview">' +
                               '<img src="[PREVIEW_SRC]" alt="[NAME]"/>' +
                           '</div>' +
@@ -21,13 +21,13 @@
                                   '<span class="file-name">[NAME]</span> (<span class="file-size">[SIZE_HUMAN]</span>)' +
                               '</div>' +
                               '<div class="controls">' +
-                                  '<span class="remove" onclick="$.uploadH5(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
-                                  '<span class="upload" onclick="$.uploadH5(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
-                                  '<span class="abort" onclick="$.uploadH5(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
+                                  '<span class="remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
+                                  '<span class="upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
+                                  '<span class="abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
                               '</div>' +
                               '<div class="result"></div>' +
-                              '<div class="uploadH5-progress">' +
-                                  '<div class="uploadH5-progress-bar"></div>' +
+                              '<div class="fileup-progress">' +
+                                  '<div class="fileup-progress-bar"></div>' +
                               '</div>' +
                           '</div>' +
                           '<div class="clear"></div>' +
@@ -37,7 +37,7 @@
         onBeforeStart: function(file_number, xhr, file) {},
         onStart: function(file_number, file) {},
         onStartSystem: function(file_number, file) {
-            var options = this.uploadH5.options;
+            var options = this.fileup.options;
             var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .upload').hide();
             $file.find('.controls .abort').show();
@@ -48,15 +48,15 @@
         },
         onProgress: function(file_number, ProgressEvent, file) {
             if (event.lengthComputable) {
-                var options = this.uploadH5.options;
+                var options = this.fileup.options;
                 var percent = Math.ceil(ProgressEvent.loaded / ProgressEvent.total * 100);
-                $('#file-' + options.inputID + '-' + file_number + ' .uploadH5-progress-bar').css('width', percent + "%");
+                $('#file-' + options.inputID + '-' + file_number + ' .fileup-progress-bar').css('width', percent + "%");
             }
         },
         onSuccess: function(file_number, response, file) {},
         onError: function(event, file, file_number, response) {},
         onErrorSystem: function(event, file, file_number) {
-            var options = this.uploadH5.options;
+            var options = this.fileup.options;
             switch(event) {
                 case 'files_limit':
                     var message = i18n[options.lang].errorFilesLimit;
@@ -92,7 +92,7 @@
         },
         onAbort: function(file_number, file) {},
         onAbortSystem: function(file_number, file) {
-            var options = this.uploadH5.options;
+            var options = this.fileup.options;
             var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').show();
@@ -103,7 +103,7 @@
         },
         onTimeout: function(file_number, file) {},
         onTimeoutSystem: function(file_number, file) {
-            var options = this.uploadH5.options;
+            var options = this.fileup.options;
             var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').show();
@@ -114,7 +114,7 @@
         },
         onFinish: function(file_number, file) {},
         onSuccessSystem: function(response, file_number, file) {
-            var options = this.uploadH5.options;
+            var options = this.fileup.options;
             var $file   = $('#file-' + options.inputID + '-' + file_number);
             $file.find('.controls .abort').hide();
             $file.find('.controls .upload').hide();
@@ -140,27 +140,27 @@
 
     var events = {
         addEvent : function(input, name, callback) {
-            var stack = input.uploadH5.events[name] || [];
+            var stack = input.fileup.events[name] || [];
             stack.push(callback);
-            input.uploadH5.events[name] = stack;
+            input.fileup.events[name] = stack;
         },
         removeEvents : function(input, name) {
-            input.uploadH5.events[name] = [];
+            input.fileup.events[name] = [];
         },
         callEvent : function(input, name, args) {
             var result = true,
                 event_result;
 
-            if (input.uploadH5.events[name]) {
-                for (var i = 0; i < input.uploadH5.events[name].length; i++) {
-                    if (typeof input.uploadH5.events[name][i] === 'function') {
+            if (input.fileup.events[name]) {
+                for (var i = 0; i < input.fileup.events[name].length; i++) {
+                    if (typeof input.fileup.events[name][i] === 'function') {
                         if (args) {
-                            event_result = input.uploadH5.events[name][i].apply(input, args);
+                            event_result = input.fileup.events[name][i].apply(input, args);
                             if (result && event_result === false) {
                                 result = false;
                             }
                         } else {
-                            event_result = input.uploadH5.events[name][i].apply(input);
+                            event_result = input.fileup.events[name][i].apply(input);
                             if (result && event_result === false) {
                                 result = false;
                             }
@@ -220,7 +220,7 @@
 
 
     /**
-     * Init uploadH5
+     * Init fileup
      * @param {object} param1
      */
     function init(param1) {
@@ -242,13 +242,13 @@
                         events.callEvent(input, 'dragEnter', [event]);
                     });
                     dropZone.addEventListener('drop',      dropFiles);
-                    dropZone.uploadH5 = {
+                    dropZone.fileup = {
                         input: input
                     };
                 }
             }
 
-            input.uploadH5 = {
+            input.fileup = {
                 files: {},
                 nextID: 0,
                 options: options,
@@ -287,8 +287,8 @@
         event.preventDefault();
         event.stopPropagation();
 
-        var input   = event.target.uploadH5.input;
-        var options = input.uploadH5.options;
+        var input   = event.target.fileup.input;
+        var options = input.fileup.options;
         var files   = event.target.files || event.dataTransfer.files;
 
         if (files.length) {
@@ -346,13 +346,13 @@
     function appendFiles() {
 
         if (this.files.length) {
-            var options  = this.uploadH5.options;
+            var options  = this.fileup.options;
             var multiple = $(this).is("[multiple]");
 
             if ( ! multiple) {
                 if (events.callEvent(this, 'remove', ['*', '1', this.files[0]])) {
                     $('#' + options.queueID).empty();
-                    this.uploadH5.files = {};
+                    this.fileup.files = {};
                 } else {
                     $(this).val('');
                     return;
@@ -366,7 +366,7 @@
                     events.callEvent(this, 'error', ['size_limit', file]);
                     continue;
                 }
-                if (options.filesLimit > 0 && Object.keys(this.uploadH5.files).length >= options.filesLimit) {
+                if (options.filesLimit > 0 && Object.keys(this.fileup.files).length >= options.filesLimit) {
                     events.callEvent(this, 'error', ['files_limit', file]);
                     break;
                 }
@@ -412,7 +412,7 @@
      */
     function appendFile(file, input) {
 
-        var options = input.uploadH5.options;
+        var options = input.fileup.options;
 
         if (window.XMLHttpRequest) {
             var xhr = ("onload" in new XMLHttpRequest()) ? new XMLHttpRequest : new XDomainRequest;
@@ -434,7 +434,7 @@
 
         var tpl = options.templateFile;
         tpl = tpl.replace(/\[INPUT_ID\]/g,   options.inputID);
-        tpl = tpl.replace(/\[FILE_NUM\]/g,   input.uploadH5.nextID);
+        tpl = tpl.replace(/\[FILE_NUM\]/g,   input.fileup.nextID);
         tpl = tpl.replace(/\[NAME\]/g,       getFileName(file));
         tpl = tpl.replace(/\[MTYPE\]/g,      file.type);
         tpl = tpl.replace(/\[SIZE\]/g,       getFileSize(file));
@@ -446,11 +446,11 @@
         var fileContainer = {
             xhr: xhr,
             file: file,
-            file_number: input.uploadH5.nextID,
+            file_number: input.fileup.nextID,
             status: 'stand_by'
         };
-        input.uploadH5.files[input.uploadH5.nextID] = fileContainer;
-        input.uploadH5.nextID++;
+        input.fileup.files[input.fileup.nextID] = fileContainer;
+        input.fileup.nextID++;
 
 
         if (file.type == 'image/gif' || file.type == 'image/png' ||
@@ -542,7 +542,7 @@
      */
     function uploadFile(input, fileContainer) {
 
-        var options     = input.uploadH5.options;
+        var options     = input.fileup.options;
         var file_number = fileContainer.file_number;
         var file        = fileContainer.file;
         var xhr         = fileContainer.xhr;
@@ -627,16 +627,16 @@
         upload: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
                 if (file_number == '*') {
-                    $.each(input.uploadH5.files, function(key, fileContainer) {
+                    $.each(input.fileup.files, function(key, fileContainer) {
                         if (fileContainer.status == 'stand_by') {
                             uploadFile(input, fileContainer);
                         }
                     });
 
-                } else if (typeof input.uploadH5.files[file_number] === 'object') {
-                    uploadFile(input, input.uploadH5.files[file_number]);
+                } else if (typeof input.fileup.files[file_number] === 'object') {
+                    uploadFile(input, input.fileup.files[file_number]);
                 }
             }
         },
@@ -644,26 +644,26 @@
         remove: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
-                var options = input.uploadH5.options;
-                var total   = Object.keys(input.uploadH5.files).length;
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
+                var options = input.fileup.options;
+                var total   = Object.keys(input.fileup.files).length;
 
                 if (file_number == '*') {
 
                     if (events.callEvent(input, 'remove', ['*', total]) === false) {
                         return;
                     }
-                    input.uploadH5.files = {};
+                    input.fileup.files = {};
                     $('[id^=file-' + inputID + '-]').fadeOut('fast', function(){
                         $(this).remove();
                     });
 
-                } else if (typeof input.uploadH5.files[file_number] === 'object') {
-                    if (events.callEvent(input, 'remove', [input.uploadH5.files[file_number], total, file_number]) === false) {
+                } else if (typeof input.fileup.files[file_number] === 'object') {
+                    if (events.callEvent(input, 'remove', [input.fileup.files[file_number], total, file_number]) === false) {
                         return;
                     }
 
-                    delete input.uploadH5.files[file_number];
+                    delete input.fileup.files[file_number];
                     $('#file-' + inputID + '-' + file_number).fadeOut('fast', function(){
                         $(this).remove();
                     });
@@ -674,7 +674,7 @@
         removeEvents: function(inputID, name) {
             var input = document.getElementById(inputID);
 
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
                 events.removeEvents(input, name);
             }
         },
@@ -682,14 +682,14 @@
         abort: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
                 if (file_number == '*') {
-                    $.each(input.uploadH5.files, function(key, fileContainer) {
+                    $.each(input.fileup.files, function(key, fileContainer) {
                         fileContainer.xhr.abort();
                     });
 
-                } else if (typeof input.uploadH5.files[file_number] === 'object') {
-                    input.uploadH5.files[file_number].xhr.abort();
+                } else if (typeof input.fileup.files[file_number] === 'object') {
+                    input.fileup.files[file_number].xhr.abort();
                 }
             }
         }
@@ -702,12 +702,12 @@
      * @param {string|int}    param3 File number
      * @returns {object}
      */
-    $.uploadH5 = function(param1, param2, param3) {
+    $.fileup = function(param1, param2, param3) {
         if ( typeof param1 === 'object' ) {
             init(param1);
 
             var input = document.getElementById(param1.inputID);
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
                 eventRegister.input = input;
                 return eventRegister;
             }
@@ -723,7 +723,7 @@
             typeof param3 === 'undefined'
         ) {
             var input = document.getElementById(param1);
-            if (input && input.type === 'file' && typeof input.uploadH5 === 'object') {
+            if (input && input.type === 'file' && typeof input.fileup === 'object') {
                 eventRegister.input = input;
                 return eventRegister;
             }

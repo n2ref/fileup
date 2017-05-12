@@ -1,8 +1,8 @@
-# File Upload HTML 5
+# FileUp 
 Upload HTML 5 is a library for uploading files to the server.  
 Supports multiple file selection, drag&drop and progress bar for jQuery.
 
-![Interface](https://dl.dropboxusercontent.com/u/31670130/img/uploadh5.png)
+![Interface](https://raw.githubusercontent.com/shabuninil/fileup/gh-pages/preview.png)
 
 ## Documentation
 
@@ -48,7 +48,7 @@ System events
 - templateFile:
  
 ```html
-<div id="file-[INPUT_ID]-[FILE_NUM]" class="uploadH5-file [TYPE]"> 
+<div id="file-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"> 
     <div class="preview"> 
         <img src="[PREVIEW_SRC]" alt="[NAME]"/> 
     </div> 
@@ -57,12 +57,12 @@ System events
             <span class="file-name">[NAME]</span> (<span class="file-size">[SIZE_HUMAN]</span>) 
         </div> 
         <div class="controls"> 
-            <span class="remove" onclick="$.uploadH5(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span> 
-            <span class="upload" onclick="$.uploadH5(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span> 
-            <span class="abort" onclick="$.uploadH5(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span> 
+            <span class="remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span> 
+            <span class="upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span> 
+            <span class="abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span> 
         </div> 
         <div class="result"></div> 
-        <div class="uploadH5-progress"> 
+        <div class="fileup-progress"> 
             <div class="uploadH5-progress-bar"></div> 
         </div> 
     </div> 

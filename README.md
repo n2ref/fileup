@@ -2,6 +2,8 @@
 Upload HTML 5 is a library for uploading files to the server.  
 Supports multiple file selection, drag&drop and progress bar for jQuery.
 
+[[DEMO]](https://shabuninil.github.io/fileup/)
+
 ![Interface](https://raw.githubusercontent.com/shabuninil/fileup/gh-pages/preview.png)
 
 ## Documentation

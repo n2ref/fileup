@@ -1,0 +1,154 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    /*background-color: #E0E0E0;*/
+}
+body > header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 52px;
+}
+body > section {
+    min-height: 100%;
+    padding-top: 20px;
+}
+body > section > .buffer-content {
+    height: 70px;
+    width: 100%;
+}
+body > footer {
+    margin-top: -50px;
+    background-color: #38354a;
+    padding: 15px 0;
+    color: #fff;
+}
+.section-margin {margin-top: 60px}
+
+.content-example,
+.content-markup {
+    position: relative;
+    border: 1px solid #ccc;
+    min-height: 100px;
+    padding: 40px 15px 15px;
+}
+.content-example {
+    padding: 70px 40px 30px 40px;
+    border-radius: 4px 4px 0 0;
+}
+.content-markup {
+    background-color: #f7f7f9;
+    margin-top: -1px;
+}
+.content-example:after,
+.content-markup:after {
+    position: absolute;
+    top:15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.content-example:after {content: "Example"}
+.content-markup:after {content: "Markup"}
+
+pre {
+    padding: 9px 14px;
+}
+
+.content-php pre,
+.content-markup pre {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.navbar-default {
+    border-color: #e0e0e0;
+    background-color: #38354a;
+    border-radius: 4px;
+}
+#docs-sidenav {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    top: 0;
+}
+#docs-sidenav > .nav li > a {
+    display: block;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #767676;
+}
+#docs-sidenav > .nav li.active > a,
+#docs-sidenav > .nav li.active:focus > a,
+#docs-sidenav > .nav li.active:hover > a {
+    padding-left: 18px;
+    font-weight: 700;
+    color: #563d7c;
+    border-left: 2px solid #563d7c;
+}
+#docs-sidenav > .nav .nav li > a {padding-left: 30px;}
+#docs-sidenav > .nav .nav li.active > a {padding-left: 28px;}
+
+
+
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>.active>a:hover {
+    background-color: #2b2838;
+    color: #d2d9e5;
+}
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav>li>a,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>li>a:hover {
+    color: #d2d9e5;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #d2d9e5;
+}
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    border-color: #2b2838;
+}
+.navbar-default .navbar-toggle {
+    border-color: #636363;
+}
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+    background-color: #2b2838;
+
+}
+
+
+.queue {
+    margin-top: 30px;
+}
+.dropzone {
+    background-color: #ccc;
+    border: 3px dashed #888;
+    width: 350px;
+    height: 150px;
+    border-radius: 25px;
+    font-size: 20px;
+    color: #777;
+    padding-top: 50px;
+    text-align: center;
+}
+.dropzone.over {
+    opacity: .7;
+    border-style: solid;
+}
+#dropzone .dropzone {
+    margin-top: 25px;
+    padding-top: 60px;
+}

@@ -91,20 +91,20 @@
                     <h3 id="example-simple">Simple upload</h3>
                     <div>
                         <div class="content-example" id="simple">
-                            <button type="button" class="btn btn-success fileup-btn">
+                            <div class="btn btn-success fileup-btn">
                                 Select file
                                 <input type="file" id="upload-1">
-                            </button>
+                            </div>
 
                             <div id="upload-1-queue" class="queue"></div>
                         </div>
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;button type="button" class="btn btn-success fileup-btn"&gt;
+    &lt;div class="btn btn-success fileup-btn"&gt;
         Select file
         &lt;input type="file" id="upload-1"&gt;
-    &lt;/button&gt;
+    &lt;/div&gt;
 
     &lt;div id="upload-1-queue" class="queue"&gt;&lt;/div&gt;
 
@@ -130,10 +130,10 @@
                     <h3 id="example-multiple">Multiple upload</h3>
                     <div>
                         <div class="content-example" id="multiple">
-                            <button type="button" class="btn btn-success fileup-btn">
+                            <div class="btn btn-success fileup-btn">
                                 Select files
                                 <input type="file" id="upload-2" multiple>
-                            </button>
+                            </div>
 
                             <a class="control-button btn btn-link" style="display: none"
                                href="javascript:$.fileup('upload-2', 'upload', '*')">Upload all</a>
@@ -145,10 +145,10 @@
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;button type="button" class="btn btn-success fileup-btn"&gt;
+    &lt;div class="btn btn-success fileup-btn"&gt;
         Select files
         &lt;input type="file" id="upload-2" multiple&gt;
-    &lt;/button&gt;
+    &lt;/div&gt;
 
     &lt;a class="control-button btn btn-link" style="display: none"
        href="javascript:$.fileup('upload-2', 'upload', '*')"&gt;Upload all&lt;/a&gt;
@@ -188,20 +188,20 @@
                     <h3 id="example-types">Upload images</h3>
                     <div>
                         <div class="content-example" id="types">
-                            <button type="button" class="btn btn-success fileup-btn">
+                            <div class="btn btn-success fileup-btn">
                                 Select images
                                 <input type="file" id="upload-3" multiple accept="image/*">
-                            </button>
+                            </div>
 
                             <div id="upload-3-queue" class="queue"></div>
                         </div>
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;button type="button" class="btn btn-success fileup-btn"&gt;
+    &lt;div class="btn btn-success fileup-btn"&gt;
         Select images
         &lt;input type="file" id="upload-3" multiple accept="image/*"&gt;
-    &lt;/button&gt;
+    &lt;/div&gt;
 
     &lt;div id="upload-3-queue" class="queue"&gt;&lt;/div&gt;
 
@@ -236,10 +236,10 @@
                     <h3 id="example-dropzone">Dropzone</h3>
                     <div>
                         <div class="content-example" id="dropzone">
-                            <button type="button" class="btn btn-success fileup-btn">
+                            <div class="btn btn-success fileup-btn">
                                 Select files
                                 <input type="file" id="upload-4" multiple>
-                            </button>
+                            </div>
 
                             <div id="upload-4-dropzone" class="dropzone">
                                 Dropzone
@@ -250,10 +250,10 @@
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;button type="button" class="btn btn-success fileup-btn"&gt;
+    &lt;div class="btn btn-success fileup-btn"&gt;
         Select files
         &lt;input type="file" id="upload-4" multiple&gt;
-    &lt;/button&gt;
+    &lt;/div&gt;
 
     &lt;div id="upload-4-dropzone" class="dropzone"&gt;
         Dropzone

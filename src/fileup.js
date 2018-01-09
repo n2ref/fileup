@@ -4,6 +4,7 @@
         inputID: '',
         queueID: '',
         dropzoneID: '',
+        files: [],
         fieldName: 'filedata',
         extraFields: {},
         lang: 'en',
@@ -12,25 +13,25 @@
         method: 'post',
         timeout: null,
         autostart: false,
-        templateFile: '<div id="file-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]">' +
-                          '<div class="preview">' +
+        templateFile: '<div id="fileup-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]">' +
+                          '<div class="fileup-preview">' +
                               '<img src="[PREVIEW_SRC]" alt="[NAME]"/>' +
                           '</div>' +
-                          '<div class="data">' +
-                              '<div class="description">' +
-                                  '<span class="file-name">[NAME]</span> (<span class="file-size">[SIZE_HUMAN]</span>)' +
+                          '<div class="fileup-container">' +
+                              '<div class="fileup-description">' +
+                                    '<span class="fileup-name">[NAME]</span> (<span class="fileup-size">[SIZE_HUMAN]</span>)' +
                               '</div>' +
-                              '<div class="controls">' +
-                                  '<span class="remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
-                                  '<span class="upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
-                                  '<span class="abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
+                              '<div class="fileup-controls">' +
+                                  '<span class="fileup-remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
+                                  '<span class="fileup-upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
+                                  '<span class="fileup-abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
                               '</div>' +
-                              '<div class="result"></div>' +
+                              '<div class="fileup-result"></div>' +
                               '<div class="fileup-progress">' +
-                                  '<div class="fileup-progress-bar"></div>' +
+                                    '<div class="fileup-progress-bar"></div>' +
                               '</div>' +
                           '</div>' +
-                          '<div class="clear"></div>' +
+                          '<div class="fileup-clear"></div>' +
                       '</div>',
         onSelect: function(file) {},
         onRemove: function(file_number, total, file) {},
@@ -38,19 +39,19 @@
         onStart: function(file_number, file) {},
         onStartSystem: function(file_number, file) {
             var options = this.fileup.options;
-            var $file   = $('#file-' + options.inputID + '-' + file_number);
-            $file.find('.controls .upload').hide();
-            $file.find('.controls .abort').show();
-            $file.find('.result')
-                .removeClass('error')
-                .removeClass('success')
+            var $file   = $('#fileup-' + options.inputID + '-' + file_number);
+            $file.find('.fileup-controls .fileup-upload').hide();
+            $file.find('.fileup-controls .fileup-abort').show();
+            $file.find('.fileup-result')
+                .removeClass('fileup-error')
+                .removeClass('fileup-success')
                 .text('');
         },
         onProgress: function(file_number, ProgressEvent, file) {
             if (event.lengthComputable) {
                 var options = this.fileup.options;
                 var percent = Math.ceil(ProgressEvent.loaded / ProgressEvent.total * 100);
-                $('#file-' + options.inputID + '-' + file_number + ' .fileup-progress-bar').css('width', percent + "%");
+                $('#fileup-' + options.inputID + '-' + file_number + ' .fileup-progress-bar').css('width', percent + "%");
             }
         },
         onSuccess: function(file_number, response, file) {},
@@ -60,8 +61,7 @@
             switch(event) {
                 case 'files_limit':
                     var message = i18n[options.lang].errorFilesLimit;
-                    message = message.replace(/%filesLimit%/g, options.filesLimit);
-                    alert(message);
+                    alert(message.replace(/%filesLimit%/g, options.filesLimit));
                     break;
                 case 'size_limit':
                     var size    = formatHuman(options.sizeLimit);
@@ -72,55 +72,53 @@
                     break;
                 case 'file_type':
                     var message = i18n[options.lang].errorFileType;
-                    message = message.replace(/%fileName%/g, file.name);
-                    alert(message);
+                    alert(message.replace(/%fileName%/g, file.name));
                     break;
                 case 'bad_status':
                 case 'error_load':
-                    var $file = $('#file-' + options.inputID + '-' + file_number);
-                    $file.find('.controls .abort').hide();
-                    $file.find('.controls .upload').show();
-                    $file.find('.result')
-                        .addClass('error')
+                    var $file = $('#fileup-' + options.inputID + '-' + file_number);
+                    $file.find('.fileup-controls .fileup-abort').hide();
+                    $file.find('.fileup-controls .fileup-upload').show();
+                    $file.find('.fileup-result')
+                        .addClass('fileup-error')
                         .text(i18n[options.lang].error);
                     break;
                 case 'old_browser':
-                    var message = i18n[options.lang].errorOldBrowser;
-                    alert(message);
+                    alert(i18n[options.lang].errorOldBrowser);
                     break;
             }
         },
         onAbort: function(file_number, file) {},
         onAbortSystem: function(file_number, file) {
             var options = this.fileup.options;
-            var $file   = $('#file-' + options.inputID + '-' + file_number);
-            $file.find('.controls .abort').hide();
-            $file.find('.controls .upload').show();
-            $file.find('.result')
-                .removeClass('error')
-                .removeClass('success')
+            var $file   = $('#fileup-' + options.inputID + '-' + file_number);
+            $file.find('.fileup-controls .fileup-abort').hide();
+            $file.find('.fileup-controls .fileup-upload').show();
+            $file.find('.fileup-result')
+                .removeClass('fileup-error')
+                .removeClass('fileup-success')
                 .text('');
         },
         onTimeout: function(file_number, file) {},
         onTimeoutSystem: function(file_number, file) {
             var options = this.fileup.options;
-            var $file   = $('#file-' + options.inputID + '-' + file_number);
-            $file.find('.controls .abort').hide();
-            $file.find('.controls .upload').show();
-            $file.find('.result')
-                .removeClass('error')
-                .removeClass('success')
+            var $file   = $('#fileup-' + options.inputID + '-' + file_number);
+            $file.find('.fileup-controls .fileup-abort').hide();
+            $file.find('.fileup-controls .fileup-upload').show();
+            $file.find('.fileup-result')
+                .removeClass('fileup-error')
+                .removeClass('fileup-success')
                 .text('');
         },
         onFinish: function(file_number, file) {},
         onSuccessSystem: function(response, file_number, file) {
             var options = this.fileup.options;
-            var $file   = $('#file-' + options.inputID + '-' + file_number);
-            $file.find('.controls .abort').hide();
-            $file.find('.controls .upload').hide();
-            $file.find('.result')
-                .removeClass('error')
-                .addClass('success')
+            var $file   = $('#fileup-' + options.inputID + '-' + file_number);
+            $file.find('.fileup-controls .fileup-abort').hide();
+            $file.find('.fileup-controls .fileup-upload').hide();
+            $file.find('.fileup-result')
+                .removeClass('fileup-error')
+                .addClass('fileup-success')
                 .text(i18n[options.lang].complete);
         },
         onDragOver: function(event) {
@@ -200,10 +198,10 @@
             remove: 'Удалить',
             complete: 'Готово',
             error: 'Ошибка',
-            errorFilesLimit: 'Количество выбранных файлов превышает лимит (%filesLimit%).',
-            errorSizeLimit: 'Файл "%fileName%" превышает предельный размер (%sizeLimit%).',
-            errorFileType: 'Файл "%fileName%" является некорректным.',
-            errorOldBrowser: 'Ваш браузер не может загружать файлы. Обновите его до последней версии.'
+            errorFilesLimit: 'Количество выбранных файлов превышает лимит (%filesLimit%)',
+            errorSizeLimit: 'Файл "%fileName%" превышает предельный размер (%sizeLimit%)',
+            errorFileType: 'Файл "%fileName%" является некорректным',
+            errorOldBrowser: 'Ваш браузер не может загружать файлы. Обновите его до последней версии'
         },
         en: {
             upload: 'Upload',
@@ -211,10 +209,10 @@
             remove: 'Remove',
             complete: 'Complete',
             error: 'Error',
-            errorFilesLimit: 'The number of selected files exceeds the limit (%filesLimit%).',
-            errorSizeLimit: 'File "%fileName%" exceeds the size limit (%sizeLimit%).',
-            errorFileType: 'File "%fileName%" is incorrect.',
-            errorOldBrowser: 'Your browser can not upload files. Update to the latest version.'
+            errorFilesLimit: 'The number of selected files exceeds the limit (%filesLimit%)',
+            errorSizeLimit: 'File "%fileName%" exceeds the size limit (%sizeLimit%)',
+            errorFileType: 'File "%fileName%" is incorrect',
+            errorOldBrowser: 'Your browser can not upload files. Update to the latest version'
         }
     };
 
@@ -275,6 +273,51 @@
             events.addEvent(input, 'dragEnter',   options.onDragEnter);
 
             $(input).on('change', appendFiles);
+
+
+            if (options.files.length > 0) {
+                for (var i = 0; i < options.files.length; i++) {
+
+                    var tpl = options.templateFile;
+                    tpl = tpl.replace(/\[INPUT_ID\]/g,   options.inputID);
+                    tpl = tpl.replace(/\[FILE_NUM\]/g,   input.fileup.nextID);
+                    tpl = tpl.replace(/\[NAME\]/g,       options.files[i].name);
+                    tpl = tpl.replace(/\[SIZE_HUMAN\]/g, formatHuman(options.files[i].size));
+                    tpl = tpl.replace(/\[UPLOAD\]/g,     i18n[options.lang].upload);
+                    tpl = tpl.replace(/\[REMOVE\]/g,     i18n[options.lang].remove);
+                    tpl = tpl.replace(/\[ABORT\]/g,      i18n[options.lang].abort);
+
+                    input.fileup.files[input.fileup.nextID] = {
+                        xhr: null,
+                        file: options.files[i],
+                        file_number: input.fileup.nextID,
+                        status: 'loaded'
+                    };
+
+                    if (options.files[i].previewUrl) {
+                        tpl = tpl.replace(/\[PREVIEW_SRC\]/g, options.files[i].previewUrl);
+                        tpl = tpl.replace(/\[TYPE\]/g,        'fileup-image');
+
+                    } else {
+                        tpl = tpl.replace(/\[PREVIEW_SRC\]/g, "");
+                        tpl = tpl.replace(/\[TYPE\]/g,        'fileup-doc');
+                    }
+
+                    $('#' + options.queueID).append(tpl)
+                        .find('.fileup-progress, .fileup-result, .fileup-upload, .fileup-abort').remove();
+
+
+                    if (options.files[i].downloadUrl) {
+                        var $name = $('#fileup-' + options.inputID + '-' + input.fileup.nextID).find('.fileup-name');
+                        if ($name[0]) {
+                            $name.replaceWith('<a href="' + options.files[i].downloadUrl + '" class="fileup-name" ' +
+                                                 'download="' + options.files[i].name + '">' + options.files[i].name + '</a>');
+                        }
+                    }
+
+                    input.fileup.nextID++;
+                }
+            }
         }
     }
 
@@ -453,14 +496,14 @@
         input.fileup.nextID++;
 
 
-        if (file.type == 'image/gif' || file.type == 'image/png' ||
-            file.type == 'image/jpg' || file.type == 'image/jpeg'
+        if (file.type === 'image/gif' || file.type === 'image/png' ||
+            file.type === 'image/jpg' || file.type === 'image/jpeg'
         ) {
             if (typeof (FileReader) !== 'undefined') {
                 var reader = new FileReader();
                 reader.onload = function (ProgressEvent) {
                     tpl = tpl.replace(/\[PREVIEW_SRC\]/g, ProgressEvent.target.result);
-                    tpl = tpl.replace(/\[TYPE\]/g, 'image');
+                    tpl = tpl.replace(/\[TYPE\]/g, 'fileup-image');
                     $('#' + options.queueID).append(tpl);
 
                     if (options.autostart) {
@@ -471,7 +514,7 @@
 
             } else {
                 tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
-                tpl = tpl.replace(/\[TYPE\]/g, 'image no-preview');
+                tpl = tpl.replace(/\[TYPE\]/g, 'fileup-image fileup-no-preview');
                 $('#' + options.queueID).append(tpl);
 
                 if (options.autostart) {
@@ -481,7 +524,7 @@
 
         } else {
             tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
-            tpl = tpl.replace(/\[TYPE\]/g, 'doc');
+            tpl = tpl.replace(/\[TYPE\]/g, 'fileup-doc');
             $('#' + options.queueID).append(tpl);
 
             if (options.autostart) {
@@ -547,7 +590,7 @@
         var file        = fileContainer.file;
         var xhr         = fileContainer.xhr;
 
-        if (typeof options.timeout === 'integer') {
+        if (typeof options.timeout === 'number') {
             xhr.timeout = options.timeout;
         }
 
@@ -566,7 +609,7 @@
         xhr.onload = function() {
             fileContainer.status = 'loaded';
 
-            if (xhr.status == 200) {
+            if (xhr.status === 200) {
                 events.callEvent(input, 'success', [xhr.responseText, file_number, file]);
             } else {
                 events.callEvent(input, 'error', ['bad_status', file, file_number, xhr.responseText]);
@@ -628,9 +671,9 @@
             var input = document.getElementById(inputID);
 
             if (input && input.type === 'file' && typeof input.fileup === 'object') {
-                if (file_number == '*') {
+                if (file_number === '*') {
                     $.each(input.fileup.files, function(key, fileContainer) {
-                        if (fileContainer.status == 'stand_by') {
+                        if (fileContainer.status === 'stand_by') {
                             uploadFile(input, fileContainer);
                         }
                     });
@@ -648,13 +691,13 @@
                 var options = input.fileup.options;
                 var total   = Object.keys(input.fileup.files).length;
 
-                if (file_number == '*') {
+                if (file_number === '*') {
 
                     if (events.callEvent(input, 'remove', ['*', total]) === false) {
                         return;
                     }
                     input.fileup.files = {};
-                    $('[id^=file-' + inputID + '-]').fadeOut('fast', function(){
+                    $('[id^=fileup-' + inputID + '-]').fadeOut('fast', function(){
                         $(this).remove();
                     });
 
@@ -664,7 +707,7 @@
                     }
 
                     delete input.fileup.files[file_number];
-                    $('#file-' + inputID + '-' + file_number).fadeOut('fast', function(){
+                    $('#fileup-' + inputID + '-' + file_number).fadeOut('fast', function(){
                         $(this).remove();
                     });
                 }
@@ -683,7 +726,7 @@
             var input = document.getElementById(inputID);
 
             if (input && input.type === 'file' && typeof input.fileup === 'object') {
-                if (file_number == '*') {
+                if (file_number === '*') {
                     $.each(input.fileup.files, function(key, fileContainer) {
                         fileContainer.xhr.abort();
                     });

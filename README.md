@@ -39,6 +39,7 @@ System events
 - inputID: '',
 - queueID: '',
 - dropzoneID: '',
+- files: [],
 - fieldName: 'filedata',
 - extraFields: {},
 - lang: 'en',
@@ -50,24 +51,24 @@ System events
 - templateFile:
  
 ```html
-<div id="file-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"> 
-    <div class="preview"> 
+<div id="fileup-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"> 
+    <div class="fileup-preview"> 
         <img src="[PREVIEW_SRC]" alt="[NAME]"/> 
     </div> 
-    <div class="data"> 
-        <div class="description"> 
-            <span class="file-name">[NAME]</span> (<span class="file-size">[SIZE_HUMAN]</span>) 
+    <div class="fileup-container"> 
+        <div class="fileup-description"> 
+            <span class="fileup-name">[NAME]</span> (<span class="fileup-size">[SIZE_HUMAN]</span>) 
         </div> 
-        <div class="controls"> 
-            <span class="remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span> 
-            <span class="upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span> 
-            <span class="abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span> 
+        <div class="fileup-controls"> 
+            <span class="fileup-remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span> 
+            <span class="fileup-upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span> 
+            <span class="fileup-abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span> 
         </div> 
-        <div class="result"></div> 
+        <div class="fileup-result"></div> 
         <div class="fileup-progress"> 
-            <div class="uploadH5-progress-bar"></div> 
+            <div class="fileup-progress-bar"></div> 
         </div> 
     </div> 
-    <div class="clear"></div> 
+    <div class="fileup-clear"></div> 
 </div>
 ```

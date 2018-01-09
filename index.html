@@ -5,16 +5,19 @@
     <title>FileUp - JQuery File Upload</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/github-gist.css" rel="stylesheet" type="text/css"/>
-    <link href="css/jquery.growl.css" rel="stylesheet" type="text/css"/>
+    <link href="css/snarl.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/fileup.min.css" rel="stylesheet" type="text/css"/>
+    <link href="css/fileup.theme2.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
 
     <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/highlight.pack.js" type="text/javascript"></script>
-    <script src="js/jquery.growl.js" type="text/javascript"></script>
+    <script src="js/snarl.min.js" type="text/javascript"></script>
     <script src="js/fileup.min.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -57,6 +60,8 @@
                                 <li><a href="#example-multiple">Multiple upload</a></li>
                                 <li><a href="#example-types">Upload images</a></li>
                                 <li><a href="#example-dropzone">Dropzone</a></li>
+                                <li><a href="#example-uploaded">Uploaded</a></li>
+                                <li><a href="#example-theme2">Theme 2</a></li>
                             </ul>
                         </li>
                         <li><a href="#options">Options</a></li>
@@ -72,16 +77,19 @@
                     <p>
                         You can download a minimized version of the library or get the full source code at github.com.
                     </p>
-                    <a class="btn btn-default" href="https://github.com/shabuninil/fileup/archive/master.zip">Download source</a>
+                    <a class="btn btn-lg btn-default" href="https://github.com/shabuninil/fileup/archive/master.zip">
+                        <i class="fa fa-download"></i>
+                        Download source
+                    </a>
 
 
                     <h2 class="section-margin">FileUp CDN</h2>
                     <pre><code class="html">
     &lt;!-- Latest compiled and minified CSS --&gt;
-    &lt;link rel="stylesheet" href="https://raw.githubusercontent.com/shabuninil/fileup/master/src/fileup.min.js"&gt;
+    &lt;link href="https://cdn.rawgit.com/shabuninil/fileup/master/src/fileup.min.js" rel="stylesheet"&gt;
 
     &lt;!-- Latest compiled and minified JavaScript --&gt;
-    &lt;script src="https://raw.githubusercontent.com/shabuninil/fileup/master/src/fileup.min.css"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.rawgit.com/shabuninil/fileup/master/src/fileup.min.css"&gt;&lt;/script&gt;
                         </code></pre>
                 </div>
 
@@ -106,19 +114,27 @@
         &lt;input type="file" id="upload-1"&gt;
     &lt;/div&gt;
 
-    &lt;div id="upload-1-queue" class="queue"&gt;&lt;/div&gt;
+    &lt;div id="upload-1-queue""&gt;&lt;/div&gt;
 
 
     &lt;script&gt;
         $.fileup({
-            url: 'example.com/your/path?file_upload=1',
+            url: '/file/upload',
             inputID: 'upload-1',
             queueID: 'upload-1-queue',
             onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
+                Snarl.addNotification({
+                    title: 'Upload success',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
+                });
             },
             onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
+                Snarl.addNotification({
+                    title: 'Upload error',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
+                });
             }
         });
     &lt;/script&gt;</code></pre>
@@ -135,48 +151,66 @@
                                 <input type="file" id="upload-2" multiple>
                             </div>
 
-                            <a class="control-button btn btn-link" style="display: none"
-                               href="javascript:$.fileup('upload-2', 'upload', '*')">Upload all</a>
-                            <a class="control-button btn btn-link" style="display: none"
-                               href="javascript:$.fileup('upload-2', 'remove', '*')">Remove all</a>
+                            <button onclick="$.fileup('upload-2', 'upload', '*')"
+                                    class="btn btn-link" type="button" style="display: none">
+                                Upload all
+                            </button>
+                            <button onclick="$.fileup('upload-2', 'remove', '*')"
+                                    type="button" class="btn btn-link" style="display: none">
+                                Remove all
+                            </button>
 
                             <div id="upload-2-queue" class="queue"></div>
                         </div>
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;div class="btn btn-success fileup-btn"&gt;
-        Select files
-        &lt;input type="file" id="upload-2" multiple&gt;
+    &lt;div id="multiple"&gt;
+        &lt;div class="btn btn-success fileup-btn"&gt;
+            Select files
+            &lt;input type="file" id="upload-2" multiple&gt;
+        &lt;/div&gt;
+
+        &lt;button onclick="$.fileup('upload-2', 'upload', '*')"
+                class="btn btn-link" type="button" style="display: none"&gt;
+            Upload all
+        &lt;/button&gt;
+        &lt;button onclick="$.fileup('upload-2', 'remove', '*')"
+                class="btn btn-link" type="button" style="display: none"&gt;
+            Remove all
+        &lt;/button&gt;
+
+        &lt;div id="upload-2-queue"&gt;&lt;/div&gt;
     &lt;/div&gt;
-
-    &lt;a class="control-button btn btn-link" style="display: none"
-       href="javascript:$.fileup('upload-2', 'upload', '*')"&gt;Upload all&lt;/a&gt;
-    &lt;a class="control-button btn btn-link" style="display: none"
-       href="javascript:$.fileup('upload-2', 'remove', '*')"&gt;Remove all&lt;/a&gt;
-
-    &lt;div id="upload-2-queue" class="queue"&gt;&lt;/div&gt;
-
 
     &lt;script&gt;
         $.fileup({
-            url: 'example.com/your/path?file_upload=1',
+            url: '/file/upload',
             inputID: 'upload-2',
             dropzoneID: 'upload-2-dropzone',
             queueID: 'upload-2-queue',
+            lang: 'ru',
             onSelect: function(file) {
-                $('#multiple .control-button').show();
+                $('#multiple button').show();
             },
             onRemove: function(file, total) {
                 if (file === '*' || total === 1) {
-                    $('#multiple .control-button').hide();
+                    $('#multiple button').hide();
                 }
             },
             onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
+                Snarl.addNotification({
+                    title: 'Upload success',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
+                });
             },
             onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
+                Snarl.addNotification({
+                    title: 'Upload error',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
+                });
             }
         });
     &lt;/script&gt;</code></pre>
@@ -203,29 +237,15 @@
         &lt;input type="file" id="upload-3" multiple accept="image/*"&gt;
     &lt;/div&gt;
 
-    &lt;div id="upload-3-queue" class="queue"&gt;&lt;/div&gt;
+    &lt;div id="upload-3-queue"&gt;&lt;/div&gt;
 
 
     &lt;script&gt;
         $.fileup({
-            url: 'https://github.com?file_upload=1',
+            url: '/file/upload',
             inputID: 'upload-3',
             queueID: 'upload-3-queue',
-            autostart: true,
-            onSelect: function(file) {
-                $('#types .control-button').show();
-            },
-            onRemove: function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#types .control-button').hide();
-                }
-            },
-            onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
-            },
-            onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
-            }
+            autostart: true
         });
     &lt;/script&gt;</code></pre>
                         </div>
@@ -236,10 +256,7 @@
                     <h3 id="example-dropzone">Dropzone</h3>
                     <div>
                         <div class="content-example" id="dropzone">
-                            <div class="btn btn-success fileup-btn">
-                                Select files
-                                <input type="file" id="upload-4" multiple>
-                            </div>
+                            <input type="file" id="upload-4" multiple style="display: none">
 
                             <div id="upload-4-dropzone" class="dropzone">
                                 Dropzone
@@ -250,38 +267,34 @@
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;div class="btn btn-success fileup-btn"&gt;
-        Select files
-        &lt;input type="file" id="upload-4" multiple&gt;
-    &lt;/div&gt;
+    &lt;input type="file" id="upload-4" multiple style="display: none"&gt;
 
-    &lt;div id="upload-4-dropzone" class="dropzone"&gt;
+    &lt;div id="upload-4-dropzone"&gt;
         Dropzone
     &lt;/div&gt;
 
-    &lt;div id="upload-4-queue" class="queue"&gt;&lt;/div&gt;
-
+    &lt;div id="upload-4-queue"&gt;&lt;/div&gt;
 
     &lt;script&gt;
         $.fileup({
-            url: 'https://github.com?file_upload=1',
+            url: '/file/upload',
             inputID: 'upload-4',
             queueID: 'upload-4-queue',
             dropzoneID: 'upload-4-dropzone'
         })
-            .select(function(file) {
-                $('#dropzone .control-button').show();
-            })
-            .remove(function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#dropzone .control-button').hide();
-                }
-            })
             .success(function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
+                Snarl.addNotification({
+                    title: 'Upload success',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
+                });
             })
             .error(function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
+                Snarl.addNotification({
+                    title: 'Upload error',
+                    text: file.name,
+                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
+                });
             })
             .dragEnter(function(event) {
                 $(event.target).addClass('over');
@@ -293,6 +306,129 @@
                 $(event.target).removeClass('over');
             });
 
+    &lt;/script&gt;</code></pre>
+                        </div>
+                    </div>
+                    <br><br>
+
+
+                    <h3 id="example-uploaded">Uploaded</h3>
+                    <div>
+                        <div class="content-example" id="uploaded">
+                            <div class="btn btn-success fileup-btn">
+                                Select files
+                                <input type="file" id="upload-5" multiple>
+                            </div>
+
+                            <div id="upload-5-queue" class="queue"></div>
+                        </div>
+
+                        <div class="content-markup">
+                                <pre><code class="html">
+    &lt;div class="btn btn-success fileup-btn"&gt;
+        Select files
+        &lt;input type="file" id="upload-5" multiple&gt;
+    &lt;/div&gt;
+
+    &lt;div id="upload-5-queue"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        $.fileup({
+            url: '/file/upload',
+            inputID: 'upload-5',
+            queueID: 'upload-5-queue',
+            files: [
+                {
+                    id: 1,
+                    name: 'Cat.jpg', // required
+                    size: '254361',  // required
+                    previewUrl: 'img/preview/cat.jpg',
+                    downloadUrl: 'img/cat.jpg',
+                    customParam: '123'
+                },
+                {
+                    id: 2,
+                    name: 'Flower.jpg', // required
+                    size: '924160',     // required
+                    previewUrl: 'img/preview/flower.jpg',
+                    downloadUrl: 'img/flower.jpg',
+                    customParam: '456'
+                },
+                {
+                    name: 'FileUp.zip', // required
+                    size: '23040',      // required
+                    downloadUrl: 'https://github.com/shabuninil/fileup/archive/master.zip'
+                }
+            ]
+        });
+    &lt;/script&gt;</code></pre>
+                        </div>
+                    </div>
+                    <br><br>
+
+
+                    <h3 id="example-theme2">Theme 2</h3>
+                    <div>
+                        <div class="content-example fileup-theme2" id="theme2">
+                            <button onclick="$.fileup('upload-6', 'upload', '*')"
+                                    class="btn btn-link" type="button" style="display: none">
+                                Upload all
+                            </button>
+                            <button onclick="$.fileup('upload-6', 'remove', '*')"
+                                    type="button" class="btn btn-link" style="display: none">
+                                Remove all
+                            </button>
+                            <div class="clearfix"></div>
+
+                            <div id="upload-6-queue" class="fileup-queue"></div>
+
+                            <div class="btn btn-default fileup-btn">
+                                <input type="file" id="upload-6" multiple>
+                            </div>
+                        </div>
+
+                        <div class="content-markup">
+                                <pre><code class="html">
+    &lt;link href="css/fileup.theme2.css" rel="stylesheet" type="text/css"/&gt;
+
+    &lt;div class="fileup-theme2"&gt;
+        &lt;div class="btn btn-success fileup-btn"&gt;
+            Select files
+            &lt;input type="file" id="upload-5" multiple&gt;
+        &lt;/div&gt;
+
+        &lt;div id="upload-5-queue"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        $.fileup({
+            url: '/file/upload',
+            inputID: 'upload-5',
+            queueID: 'upload-5-queue',
+            files: [
+                {
+                    id: 1,
+                    name: 'Cat.jpg', // required
+                    size: '254361',  // required
+                    previewUrl: 'img/preview/cat.jpg',
+                    downloadUrl: 'img/cat.jpg',
+                    customParam: '123'
+                },
+                {
+                    id: 2,
+                    name: 'Flower.jpg', // required
+                    size: '924160',     // required
+                    previewUrl: 'img/preview/flower.jpg',
+                    downloadUrl: 'img/flower.jpg',
+                    customParam: '456'
+                },
+                {
+                    name: 'FileUp.zip', // required
+                    size: '23040',      // required
+                    downloadUrl: 'https://github.com/shabuninil/fileup/archive/master.zip'
+                }
+            ]
+        });
     &lt;/script&gt;</code></pre>
                         </div>
                     </div>
@@ -342,6 +478,12 @@
                                 <td>The name of the variable in which the file should be loaded</td>
                             </tr>
                             <tr>
+                                <td>files</td>
+                                <td>array</td>
+                                <td>[]</td>
+                                <td>Array of installed format</td>
+                            </tr>
+                            <tr>
                                 <td>extraFields</td>
                                 <td>object</td>
                                 <td>{}</td>
@@ -351,7 +493,7 @@
                                 <td>lang</td>
                                 <td>string</td>
                                 <td><code>en</code></td>
-                                <td>Interface language</td>
+                                <td>Interface language (en/ru)</td>
                             </tr>
                             <tr>
                                 <td>sizeLimit</td>
@@ -369,7 +511,7 @@
                                 <td>method</td>
                                 <td>string</td>
                                 <td>post</td>
-                                <td>Http method used when downloading files</td>
+                                <td>Http method used when uploading files</td>
                             </tr>
                             <tr>
                                 <td>timeout</td>
@@ -394,25 +536,25 @@
 
                         <h3>Default content option "templateFile"</h3>
                         <pre><code class="html">
-&lt;div id="file-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"&gt;
-    &lt;div class="preview"&gt;
+&lt;div id="fileup-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"&gt;
+    &lt;div class="fileup-preview"&gt;
         &lt;img src="[PREVIEW_SRC]" alt="[NAME]"/&gt;
     &lt;/div&gt;
-    &lt;div class="data"&gt;
-        &lt;div class="description"&gt;
-            &lt;span class="file-name"&gt;[NAME]&lt;/span&gt; (&lt;span class="file-size"&gt;[SIZE_HUMAN]&lt;/span&gt;)
+    &lt;div class="fileup-container"&gt;
+        &lt;div class="fileup-description"&gt;
+            &lt;span class="fileup-name"&gt;[NAME]&lt;/span&gt; (&lt;span class="fileup-size"&gt;[SIZE_HUMAN]&lt;/span&gt;)
         &lt;/div&gt;
-        &lt;div class="controls"&gt;
-            &lt;span class="remove" onclick="$.fileup('[INPUT_ID]', 'remove', '[FILE_NUM]');" title="[REMOVE]"&gt;&lt;/span&gt;
-            &lt;span class="upload" onclick="$.fileup('[INPUT_ID]', 'upload', '[FILE_NUM]');"&gt;[UPLOAD]&lt;/span&gt;
-            &lt;span class="abort" onclick="$.fileup('[INPUT_ID]', 'abort, '[FILE_NUM]');" style="display:none"&gt;[ABORT]&lt;/span&gt;
+        &lt;div class="fileup-controls"&gt;
+            &lt;span class="fileup-remove" onclick="$.fileup('[INPUT_ID]', 'remove', '[FILE_NUM]');" title="[REMOVE]"&gt;&lt;/span&gt;
+            &lt;span class="fileup-upload" onclick="$.fileup('[INPUT_ID]', 'upload', '[FILE_NUM]');"&gt;[UPLOAD]&lt;/span&gt;
+            &lt;span class="fileup-abort" onclick="$.fileup('[INPUT_ID]', 'abort, '[FILE_NUM]');" style="display:none"&gt;[ABORT]&lt;/span&gt;
         &lt;/div&gt;
-        &lt;div class="result"&gt;&lt;/div&gt;
+        &lt;div class="fileup-result"&gt;&lt;/div&gt;
         &lt;div class="fileup-progress"&gt;
-            &lt;div class="uploadH5-progress-bar"&gt;&lt;/div&gt;
+            &lt;div class="fileup-progress-bar"&gt;&lt;/div&gt;
         &lt;/div&gt;
     &lt;/div&gt;
-    &lt;div class="clear"&gt;&lt;/div&gt;
+    &lt;div class="fileup-clear"&gt;&lt;/div&gt;
 &lt;/div&gt;
                         </code></pre>
                     </div>
@@ -420,13 +562,13 @@
 
                     <h2 id="methods" class="section-margin">Methods</h2>
                     <div>
-                        <code>$.fileup('input_id', 'remove', 'file num or *');</code>
+                        <code>$.fileup('input_id', 'remove', 'file_num or *');</code>
                         <p>Deleting all or specified files from the download queue</p>
 
-                        <code>$.fileup('input_id', 'upload', 'file num or *');</code>
+                        <code>$.fileup('input_id', 'upload', 'file_num or *');</code>
                         <p>Loading all or specified files from the queue</p>
 
-                        <code>$.fileup('input_id', 'abort', 'file num or *');</code>
+                        <code>$.fileup('input_id', 'abort', 'file_num or *');</code>
                         <p>Stop downloading all or specified files from the queue</p>
                     </div>
 
@@ -575,109 +717,5 @@
     </section>
 </footer>
 
-
-<script type="text/javascript">
-    $(function() {
-        // Simple
-        $.fileup({
-            //url: 'example.com/your/path?file_upload=1',
-            inputID: 'upload-1',
-            queueID: 'upload-1-queue',
-            lang: 'en',
-            onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
-            },
-            onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
-            }
-        });
-
-
-        // Multiple
-        $.fileup({
-            //url: 'example.com/your/path?file_upload=1',
-            inputID: 'upload-2',
-            dropzoneID: 'upload-2-dropzone',
-            queueID: 'upload-2-queue',
-            lang: 'en',
-            onSelect: function(file) {
-                $('#multiple .control-button').show();
-            },
-            onRemove: function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#multiple .control-button').hide();
-                }
-            },
-            onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
-            },
-            onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
-            }
-        });
-
-
-        // Upload images
-        $.fileup({
-            //url: 'example.com/your/path?file_upload=1',
-            inputID: 'upload-3',
-            queueID: 'upload-3-queue',
-            lang: 'en',
-            autostart: true,
-            onSelect: function(file) {
-                $('#types .control-button').show();
-            },
-            onRemove: function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#types .control-button').hide();
-                }
-            },
-            onSuccess: function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
-            },
-            onError: function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
-            }
-        });
-
-
-        // Dropzone
-        $.fileup({
-            //url: 'https://github.com?file_upload=1',
-            inputID: 'upload-4',
-            queueID: 'upload-4-queue',
-            dropzoneID: 'upload-4-dropzone',
-            lang: 'en'
-        })
-            .select(function(file) {
-                $('#dropzone .control-button').show();
-            })
-            .remove(function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#dropzone .control-button').hide();
-                }
-            })
-            .success(function(response, file_number, file) {
-                $.growl.notice({ title: "Upload success!", message: file.name });
-            })
-            .error(function(event, file, file_number) {
-                $.growl.error({ message: "Upload error!" });
-            })
-            .dragEnter(function(event) {
-                $(event.target).addClass('over');
-            })
-            .dragLeave(function(event) {
-                $(event.target).removeClass('over');
-            })
-            .dragEnd(function(event) {
-                $(event.target).removeClass('over');
-            });
-
-
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-    });
-</script>
 </body>
 </html>

@@ -1,0 +1,102 @@
+.fileup-theme2 .fileup-file {
+    width: 125px;
+    height: 125px;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+}
+.fileup-theme2 .fileup-queue {
+    float: left;
+}
+.fileup-theme2 .fileup-btn {
+    width: 125px;
+    height: 125px;
+}
+.fileup-theme2 .fileup-file.fileup-image .fileup-preview {
+    width: auto;
+    float: none;
+    text-align: center;
+    margin-bottom: 5px;
+    height: 53px;
+}
+.fileup-theme2 .fileup-file.fileup-doc .fileup-preview {
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    float: none;
+    margin-bottom: 5px;
+    height: 53px;
+}
+.fileup-theme2 .fileup-file.fileup-image .fileup-preview img {
+    max-width: 80px;
+    max-height: 53px;
+}
+.fileup-theme2 .fileup-file.fileup-image .fileup-container,
+.fileup-theme2 .fileup-file.fileup-doc .fileup-container {
+    margin-left: 0;
+}
+.fileup-theme2 .fileup-file .fileup-controls .fileup-remove {
+    top: 0;
+    right: 0;
+}
+.fileup-theme2 .fileup-file .fileup-container .fileup-description {
+    padding-right: 0;
+    font-size: 0;
+}
+.fileup-theme2 .fileup-file .fileup-container .fileup-name {
+    display: inline-block;
+    width: 100%;
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.fileup-theme2 .fileup-file .fileup-container .fileup-size {
+    width: 100%;
+    font-size: 10px;
+    color: #737373;
+}
+.fileup-theme2 .fileup-file .fileup-result.fileup-error {
+    color: #CE0000;
+    position: absolute;
+    top: 4px;
+    left: 10px;
+    right: 13px;
+    font-size: 10px;
+    background: #F5F5F5;
+    height: 53px;
+}
+.fileup-theme2 .fileup-progress {
+    width: 123px;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+}
+.fileup-theme2 .fileup-btn::after {
+    content: " ";
+    position: absolute;
+    display: block;
+    border-radius: 4px;
+    background-color: #BDBDBD;
+    height: 10px;
+    margin-top: -5px;
+    top: 50%;
+    left: 40px;
+    right: 40px;
+    z-index: 9;
+}
+.fileup-theme2 .fileup-btn::before {
+    content: " ";
+    position: absolute;
+    display: block;
+    border-radius: 4px;
+    background-color: #BDBDBD;
+    width: 10px;
+    margin-left: -5px;
+    left: 50%;
+    top: 40px;
+    bottom: 40px;
+    z-index: 9;
+}

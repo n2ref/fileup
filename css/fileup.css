@@ -1,0 +1,117 @@
+.fileup-file {
+    background-color: #F5F5F5;
+    border: 1px solid #DBDBDB;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    font: 12px Verdana, Geneva, sans-serif;
+    margin-bottom: 5px;
+    max-width: 350px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+.fileup-file.fileup-image .fileup-preview {
+    width: 85px;
+    float: left;
+}
+.fileup-file.fileup-doc .fileup-preview {
+    width: 32px;
+    float: left;
+}
+.fileup-file.fileup-image .fileup-preview img {
+    max-height: 80px;
+    max-width: 80px;
+}
+.fileup-file.fileup-image.fileup-no-preview .fileup-preview img,
+.fileup-file.fileup-doc .fileup-preview img {
+    display: none;
+}
+.fileup-file.fileup-image.no-preview .fileup-preview {
+    width: 80px;
+    height: 56px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAA4CAAAAABP3SBGAAACW0lEQVRYw+3Y3U8aQRAAcP7/98bb3YFDxSvUBCKlxigllVrFILFEmmJrxdYrB7e7Q+JfUD4Ocgcs7OX2oQ/OAwmZ8Mt+zO7NkcraZiOVSRuNTMp+BU2BzCIJAyIgK19eJIv6PoRB0njBRDHiBRYG6Rf0EwXvv/3fQM6Ngsjd5/GHKZCLdvkgV2wOhSmwRglj1Kp43AgoG9a05mCnKk2AvO+w4HjZj8IAKLsAwcmlLdQEl4oiCt6x+VVAGpogf3KFEhQPmWCEwNpSAZKLKHh0NNwwxhIJZuy4XAvEO2adqGctuzad7gm9RV8H5H6RpklVqMWOM74Arb2m9LVAbFFIA6lJteg2q6dXT9LXArlXmMwIyLla5CglCl8PxMZszWGlOKX+9RUC+XMuqDOg1xGx31Ev6wYQz6153QK0wkt7Qz4rRTUoe7uLg5Bm6a+jxU9ch9LToYwL4pkVesyyTAdDIwer/FfGA+XP+bmaXyjfZxn5y54krMMexgJFhURbAbp7P02JD7MEyXUxBojfAJaaC7r/gNPTGCSo3cYYIyzRlXaFOj3JB4eLBIPGasUrQLylsNoAkfzvl6vQVjH6iQstkA/e0XUtFSneH7DQdyDHntQB8Zqsb9JYdmngVukPbge5GxlHOGB1GR5wKyjrRL+zpHsd3AJyL09j9KoscxPqRdaDBRan+2WsLrhJcLzZZ0NhEpzcFa7cBDo7NGa8cX5w9S57teOTuFH5OHs0ry9sIeOHP9TpHJL32MlBLx8FL0c8UYhB9D0FCpX3yaKchei7Hk0a8PoCbgw0/a/IP7jBCOMW5IDRAAAAAElFTkSuQmCC);
+}
+.fileup-file.fileup-doc .fileup-preview {
+    width: 32px;
+    height: 32px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABi0lEQVRYR+2Xz0rDQBDGZzbWi4on21fwEQRvuUut2oMvIAVrvanNRby09dooCH0CabW1Z+lN8BHEJ/DPQZR6sc2M2UBqIsaQNLgeuqfN7s58v/2GLAyCZ6wXy4sosAYW6KDBnHdv3DkRvGuCekS4d3FSvXPzoTuR4qzhrWCYH1fst3hCeEWLl1yIEcBGyejYgVkgaFvDVKF9dvSUJEh+p7zAiA1Hg6HbMitZmf8LYNt4k7ZbH6lM0uLuRXKFw7Q2PXgkoP5lveaU2OsAy4VWvTJaS9IBN5fttE/n/wN0ejcOcdyxqi/7HI3sgHKAuDcPiovsgHIA5SVQDqC8BMoBlJdAOYDyEigHCCvB97c+DDjyS6gcIOxGUfcjOxBVIOz8BGDiwMSBQAfWikZfCJhB5nTTrD6H/U5x9jd3jcyA4eHHxiRfOugyiBU78ZXdHW0l3R1J8SFTQ2ogQ6dpVnK+zuivmlO7yXiZspvT89PqvQ9AfjjtOeIxIekCxGwcm4NipO0ai2tBvO+Ky7OfS/tTMPcqUk4AAAAASUVORK5CYII=);
+}
+.fileup-file .fileup-clear {
+    clear: both;
+}
+.fileup-file.fileup-doc .fileup-container {
+    margin-left: 42px;
+}
+.fileup-file.fileup-image .fileup-container {
+    margin-left: 90px;
+}
+.fileup-file .fileup-controls {
+    margin-top: 5px;
+}
+.fileup-file .fileup-controls .fileup-upload {
+    margin-right: 10px;
+}
+.fileup-file .fileup-controls .fileup-remove {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width:  16px;
+    height: 16px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAIBJREFUOI3dkLENg0AQBGeRIHIGtGBciQNnpJRADgUgN+AKXQAVODpHSA7u75EzmHRvVquD0/HI5BVwjw6uwJSSJT2BNreiA+Z/Za8klJUp6SVdzOwFrN5RERS8JdVm9knJEZWkBaiJH+tS/sgb3mNDuXGyXSVjQt64AcOeJQfiC5NFE9mPPVrMAAAAAElFTkSuQmCC');
+    background-color: #F5F5F5;
+}
+.fileup-file .fileup-controls .fileup-upload,
+.fileup-file .fileup-controls .fileup-abort {
+    color: #428bca;
+    cursor: pointer;
+}
+.fileup-file .fileup-controls .fileup-upload:hover,
+.fileup-file .fileup-controls .fileup-abort:hover {
+    color: #2a6496;
+    text-decoration: underline;
+}
+.fileup-file .fileup-container .fileup-description {
+    padding-right: 15px;
+    word-break: break-all;
+}
+.fileup-file .fileup-container .fileup-size {
+    white-space: nowrap;
+}
+.fileup-file .fileup-result.fileup-success {
+    color: #4CAE4C;
+}
+.fileup-file .fileup-result.fileup-error {
+    color: #CE0000;
+}
+.fileup-progress {
+    background-color: #E5E5E5;
+    margin-top: 10px;
+    width: 100%;
+}
+.fileup-progress-bar {
+    width: 1px;
+    height: 3px;
+    background-color: #0099ff;
+    -webkit-transition: width .1s ease-out 0.1s;
+    -moz-transition: width .1s ease-out 0.1s;
+    -o-transition: width .1s ease-out 0.1s;
+    transition: width .1s ease-out 0.1s
+}
+.fileup-btn {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+.fileup-btn input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}

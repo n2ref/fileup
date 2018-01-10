@@ -370,16 +370,6 @@
                     <h3 id="example-theme2">Theme 2</h3>
                     <div>
                         <div class="content-example fileup-theme2" id="theme2">
-                            <button onclick="$.fileup('upload-6', 'upload', '*')"
-                                    class="btn btn-link" type="button" style="display: none">
-                                Upload all
-                            </button>
-                            <button onclick="$.fileup('upload-6', 'remove', '*')"
-                                    type="button" class="btn btn-link" style="display: none">
-                                Remove all
-                            </button>
-                            <div class="clearfix"></div>
-
                             <div id="upload-6-queue" class="fileup-queue"></div>
 
                             <div class="btn btn-default fileup-btn">
@@ -389,22 +379,22 @@
 
                         <div class="content-markup">
                                 <pre><code class="html">
-    &lt;link href="css/fileup.theme2.css" rel="stylesheet" type="text/css"/&gt;
+    &lt;link href="css/fileup.theme2.min.css" rel="stylesheet" type="text/css"/&gt;
 
     &lt;div class="fileup-theme2"&gt;
-        &lt;div class="btn btn-success fileup-btn"&gt;
-            Select files
-            &lt;input type="file" id="upload-5" multiple&gt;
-        &lt;/div&gt;
+        &lt;div id="upload-6-queue" class="fileup-queue"&gt;&lt;/div&gt;
 
-        &lt;div id="upload-5-queue"&gt;&lt;/div&gt;
+        &lt;div class="btn btn-default fileup-btn"&gt;
+            &lt;input type="file" id="upload-6" multiple&gt;
+        &lt;/div&gt;
     &lt;/div&gt;
+
 
     &lt;script&gt;
         $.fileup({
             url: '/file/upload',
-            inputID: 'upload-5',
-            queueID: 'upload-5-queue',
+            inputID: 'upload-6',
+            queueID: 'upload-6-queue',
             files: [
                 {
                     id: 1,

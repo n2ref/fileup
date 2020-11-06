@@ -14,28 +14,30 @@
         timeout: null,
         autostart: false,
         templateFile: '<div id="fileup-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]">' +
-                          '<div class="fileup-preview">' +
-                              '<img src="[PREVIEW_SRC]" alt="[NAME]"/>' +
-                          '</div>' +
-                          '<div class="fileup-container">' +
-                              '<div class="fileup-description">' +
-                                    '<span class="fileup-name">[NAME]</span> (<span class="fileup-size">[SIZE_HUMAN]</span>)' +
-                              '</div>' +
-                              '<div class="fileup-controls">' +
-                                  '<span class="fileup-remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
-                                  '<span class="fileup-upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
-                                  '<span class="fileup-abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
-                              '</div>' +
-                              '<div class="fileup-result"></div>' +
-                              '<div class="fileup-progress">' +
-                                    '<div class="fileup-progress-bar"></div>' +
-                              '</div>' +
-                          '</div>' +
-                          '<div class="fileup-clear"></div>' +
-                      '</div>',
+            '<div class="fileup-preview">' +
+            '<img src="[PREVIEW_SRC]" alt="[NAME]"/>' +
+            '</div>' +
+            '<div class="fileup-container">' +
+            '<div class="fileup-description">' +
+            '<span class="fileup-name">[NAME]</span> (<span class="fileup-size">[SIZE_HUMAN]</span>)' +
+            '</div>' +
+            '<div class="fileup-controls">' +
+            '<span class="fileup-remove" onclick="$.fileup(\'[INPUT_ID]\', \'remove\', \'[FILE_NUM]\');" title="[REMOVE]"></span>' +
+            '<span class="fileup-upload" onclick="$.fileup(\'[INPUT_ID]\', \'upload\', \'[FILE_NUM]\');">[UPLOAD]</span>' +
+            '<span class="fileup-abort" onclick="$.fileup(\'[INPUT_ID]\', \'abort\', \'[FILE_NUM]\');" style="display:none">[ABORT]</span>' +
+            '</div>' +
+            '<div class="fileup-result"></div>' +
+            '<div class="fileup-progress">' +
+            '<div class="fileup-progress-bar"></div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="fileup-clear"></div>' +
+            '</div>',
         onSelect: function(file) {},
         onRemove: function(file_number, total, file) {},
         onBeforeStart: function(file_number, xhr, file) {},
+        onBeforeRender: function() {},
+        onAfterRender: function() {},
         onStart: function(file_number, file) {},
         onStartSystem: function(file_number, file) {
             var options = this.fileup.options;
@@ -253,29 +255,32 @@
                 events: {}
             };
 
-            events.addEvent(input, 'select',      options.onSelect);
-            events.addEvent(input, 'remove',      options.onRemove);
-            events.addEvent(input, 'beforeStart', options.onBeforeStart);
-            events.addEvent(input, 'start',       options.onStartSystem);
-            events.addEvent(input, 'start',       options.onStart);
-            events.addEvent(input, 'progress',    options.onProgress);
-            events.addEvent(input, 'success',     options.onSuccessSystem);
-            events.addEvent(input, 'success',     options.onSuccess);
-            events.addEvent(input, 'error',       options.onErrorSystem);
-            events.addEvent(input, 'error',       options.onError);
-            events.addEvent(input, 'abort',       options.onAbortSystem);
-            events.addEvent(input, 'abort',       options.onAbort);
-            events.addEvent(input, 'timeout',     options.onTimeoutSystem);
-            events.addEvent(input, 'timeout',     options.onTimeout);
-            events.addEvent(input, 'dragOver',    options.onDragOver);
-            events.addEvent(input, 'dragLeave',   options.onDragLeave);
-            events.addEvent(input, 'dragEnd',     options.onDragEnd);
-            events.addEvent(input, 'dragEnter',   options.onDragEnter);
+            events.addEvent(input, 'select',       options.onSelect);
+            events.addEvent(input, 'remove',       options.onRemove);
+            events.addEvent(input, 'beforeStart',  options.onBeforeStart);
+            events.addEvent(input, 'beforeRender', options.onBeforeRender);
+            events.addEvent(input, 'afterRender',  options.onAfterRender);
+            events.addEvent(input, 'start',        options.onStartSystem);
+            events.addEvent(input, 'start',        options.onStart);
+            events.addEvent(input, 'progress',     options.onProgress);
+            events.addEvent(input, 'success',      options.onSuccessSystem);
+            events.addEvent(input, 'success',      options.onSuccess);
+            events.addEvent(input, 'error',        options.onErrorSystem);
+            events.addEvent(input, 'error',        options.onError);
+            events.addEvent(input, 'abort',        options.onAbortSystem);
+            events.addEvent(input, 'abort',        options.onAbort);
+            events.addEvent(input, 'timeout',      options.onTimeoutSystem);
+            events.addEvent(input, 'timeout',      options.onTimeout);
+            events.addEvent(input, 'dragOver',     options.onDragOver);
+            events.addEvent(input, 'dragLeave',    options.onDragLeave);
+            events.addEvent(input, 'dragEnd',      options.onDragEnd);
+            events.addEvent(input, 'dragEnter',    options.onDragEnter);
 
             $(input).on('change', appendFiles);
 
 
             if (options.files.length > 0) {
+                events.callEvent(input, 'beforeRender');
                 for (var i = 0; i < options.files.length; i++) {
 
                     var tpl = options.templateFile;
@@ -311,12 +316,13 @@
                         var $name = $('#fileup-' + options.inputID + '-' + input.fileup.nextID).find('.fileup-name');
                         if ($name[0]) {
                             $name.replaceWith('<a href="' + options.files[i].downloadUrl + '" class="fileup-name" ' +
-                                                 'download="' + options.files[i].name + '">' + options.files[i].name + '</a>');
+                                'download="' + options.files[i].name + '">' + options.files[i].name + '</a>');
                         }
                     }
 
                     input.fileup.nextID++;
                 }
+                events.callEvent(input, 'afterRender');
             }
         }
     }
@@ -335,6 +341,7 @@
         var files   = event.target.files || event.dataTransfer.files;
 
         if (files.length) {
+            events.callEvent(input, 'beforeRender');
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
 
@@ -377,6 +384,7 @@
             }
 
             $(input).val('');
+            events.callEvent(input, 'afterRender');
         }
 
         events.callEvent(input, 'dragEnd', [event]);
@@ -402,6 +410,7 @@
                 }
             }
 
+            events.callEvent(this, 'beforeRender');
             for (var i = 0; i < this.files.length; i++) {
                 var file = this.files[i];
 
@@ -441,8 +450,8 @@
 
                 appendFile(file, this);
             }
-
             $(this).val('');
+            events.callEvent(this, 'afterRender');
         }
     }
 

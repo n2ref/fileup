@@ -50,7 +50,7 @@
                 .text('');
         },
         onProgress: function(file_number, ProgressEvent, file) {
-            if (event.lengthComputable) {
+            if (ProgressEvent.lengthComputable) {
                 var options = this.fileup.options;
                 var percent = Math.ceil(ProgressEvent.loaded / ProgressEvent.total * 100);
                 $('#fileup-' + options.inputID + '-' + file_number + ' .fileup-progress-bar').css('width', percent + "%");
@@ -676,6 +676,22 @@
 
 
     var methods = {
+
+        /**
+         * Добавление нового файла в очередь загрузки
+         * @param inputID
+         * @param file
+         */
+        appendFile: function(inputID, file) {
+            appendFile(file, document.getElementById(inputID));
+        },
+
+
+        /**
+         * Загрузка файла или всех файлов
+         * @param inputID
+         * @param file_number
+         */
         upload: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
@@ -693,6 +709,12 @@
             }
         },
 
+
+        /**
+         * Удаление файла или всех файлов
+         * @param inputID
+         * @param file_number
+         */
         remove: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
@@ -723,6 +745,12 @@
             }
         },
 
+
+        /**
+         * Удаление всех событий
+         * @param inputID
+         * @param name
+         */
         removeEvents: function(inputID, name) {
             var input = document.getElementById(inputID);
 
@@ -731,6 +759,12 @@
             }
         },
 
+
+        /**
+         * Отмена загрузки
+         * @param inputID
+         * @param file_number
+         */
         abort: function(inputID, file_number) {
             var input = document.getElementById(inputID);
 
@@ -755,6 +789,7 @@
      * @returns {object}
      */
     $.fileup = function(param1, param2, param3) {
+        // Инициализация
         if ( typeof param1 === 'object' ) {
             init(param1);
 
@@ -764,12 +799,14 @@
                 return eventRegister;
             }
 
+        // Выполнение метода
         } else if ( typeof param1 === 'string' &&
             typeof param2 === 'string' &&
             typeof methods[param2] == 'function'
         ) {
             methods[param2](param1, param3);
 
+        // Получение списка событий для добавления своего
         } else if ( typeof param1 === 'string' &&
             typeof param2 === 'undefined' &&
             typeof param3 === 'undefined'

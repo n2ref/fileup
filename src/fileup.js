@@ -215,6 +215,17 @@
             errorSizeLimit: 'File "%fileName%" exceeds the size limit (%sizeLimit%)',
             errorFileType: 'File "%fileName%" is incorrect',
             errorOldBrowser: 'Your browser can not upload files. Update to the latest version'
+        },
+        ptBR: {
+            upload: 'Enviar',
+            abort: 'Cancelar',
+            remove: 'Remover',
+            complete: 'Enviado',
+            error: 'Erro',
+            errorFilesLimit: 'O número de arquivos selecionados excede o limite (%filesLimit%)',
+            errorSizeLimit: 'Arquivo "%fileName%" excede o limite (%sizeLimit%)',
+            errorFileType: 'Arquivo "%fileName%" inválido',
+            errorOldBrowser: 'Seu navegador não pode enviar os arquivos. Atualize para a versão mais recente'
         }
     };
 

@@ -194,6 +194,17 @@
 
 
     var i18n = {
+         tr: {
+            upload: 'Yükle',
+            abort: 'İptal Et',
+            remove: 'Sil',
+            complete: 'Tamamlandı',
+            error: 'Hata',
+            errorFilesLimit: 'Seçilen dosyaların sayısı sınırı aşıyor (%filesLimit%)',
+            errorSizeLimit: '%fileName%" dosyası boyut sınırını (%sizeLimit%) aşıyor',
+            errorFileType: '"%fileName%" dosyası hatalı',
+            errorOldBrowser: 'Tarayıcınız dosya yükleyemiyor. En son sürüme güncelleyin'
+        },
         ru: {
             upload: 'Загрузить',
             abort: 'Остановить',

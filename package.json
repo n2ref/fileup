@@ -1,6 +1,6 @@
 {
   "name": "fileup-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fileup - file upload lib",
   "scripts": {
     "build_all": "gulp build_tpl && gulp build_js_min && gulp build_js && gulp build_css_min && gulp build_css && npm run test_js",

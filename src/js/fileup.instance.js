@@ -20,6 +20,7 @@ let fileUpInstance = {
         httpMethod: 'post',
         timeout: null,
         autostart: false,
+        showClose: true,
         templateFile: null,
 
         onSelect: null,

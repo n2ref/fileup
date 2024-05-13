@@ -202,6 +202,48 @@ let fileUpFile = {
 
 
     /**
+     * Показ сообщения об ошибке
+     * @param {string} message
+     */
+    showError: function (message) {
+
+        if (typeof message !== 'string') {
+            return;
+        }
+
+        let element = this.getElement();
+
+        if (element) {
+            element.find('.fileup-result')
+                .removeClass('fileup-success')
+                .addClass('fileup-error')
+                .text(message);
+        }
+    },
+
+
+    /**
+     * Показ сообщения об успехе
+     * @param {string} message
+     */
+    showSuccess: function (message) {
+
+        if (typeof message !== 'string') {
+            return;
+        }
+
+        let element = this.getElement();
+
+        if (element) {
+            element.find('.fileup-result')
+                .removeClass('fileup-error')
+                .addClass('fileup-success')
+                .text(message);
+        }
+    },
+
+
+    /**
      * Удаление файла на странице и из памяти
      */
     remove: function () {
@@ -366,6 +408,7 @@ let fileUpFile = {
         let isNoPreview = false;
         let mimeTypes   = fileUpUtils.isObject(options.mimeTypes) ? options.mimeTypes : {};
         let iconDefault = typeof options.iconDefault === 'string' ? options.iconDefault : '';
+        let showClose   = typeof options.showClose === 'boolean' ? options.showClose : true;
         let size        = this.getSizeHuman();
         let icon        = null;
 
@@ -489,6 +532,10 @@ let fileUpFile = {
 
         this._fileElement.find('.fileup-icon').addClass(icon);
 
+
+        if ( ! showClose) {
+            this._fileElement.find('.fileup-remove').hide();
+        }
 
         if (this.getUrlDownload()) {
             let $name = this._fileElement.find('.fileup-name');

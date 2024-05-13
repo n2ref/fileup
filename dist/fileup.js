@@ -256,6 +256,32 @@
       this._status = status;
     },
     /**
+     * Показ сообщения об ошибке
+     * @param {string} message
+     */
+    showError: function showError(message) {
+      if (typeof message !== 'string') {
+        return;
+      }
+      var element = this.getElement();
+      if (element) {
+        element.find('.fileup-result').removeClass('fileup-success').addClass('fileup-error').text(message);
+      }
+    },
+    /**
+     * Показ сообщения об успехе
+     * @param {string} message
+     */
+    showSuccess: function showSuccess(message) {
+      if (typeof message !== 'string') {
+        return;
+      }
+      var element = this.getElement();
+      if (element) {
+        element.find('.fileup-result').removeClass('fileup-error').addClass('fileup-success').text(message);
+      }
+    },
+    /**
      * Удаление файла на странице и из памяти
      */
     remove: function remove() {
@@ -384,6 +410,7 @@
       var isNoPreview = false;
       var mimeTypes = fileUpUtils.isObject(options.mimeTypes) ? options.mimeTypes : {};
       var iconDefault = typeof options.iconDefault === 'string' ? options.iconDefault : '';
+      var showClose = typeof options.showClose === 'boolean' ? options.showClose : true;
       var size = this.getSizeHuman();
       var icon = null;
       var fileType = null;
@@ -473,6 +500,9 @@
         icon = iconDefault;
       }
       this._fileElement.find('.fileup-icon').addClass(icon);
+      if (!showClose) {
+        this._fileElement.find('.fileup-remove').hide();
+      }
       if (this.getUrlDownload()) {
         var $name = this._fileElement.find('.fileup-name');
         if ($name[0]) {
@@ -959,6 +989,7 @@
       httpMethod: 'post',
       timeout: null,
       autostart: false,
+      showClose: true,
       templateFile: null,
       onSelect: null,
       onRemove: null,

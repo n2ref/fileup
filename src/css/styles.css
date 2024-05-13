@@ -24,23 +24,26 @@ body > footer {
     background-color: #38354a;
     padding: 15px 0;
     color: #fff;
+    height: 50px;
 }
 .section-margin {margin-top: 60px}
 
 .content-example,
 .content-markup {
+    background-color: #fff;
     position: relative;
     border: 1px solid #ccc;
     min-height: 100px;
     padding: 40px 15px 15px;
 }
 .content-example {
-    padding: 70px 40px 30px 40px;
+    padding: 70px 70px 30px 70px;
     border-radius: 4px 4px 0 0;
 }
 .content-markup {
     background-color: #f7f7f9;
     margin-top: -1px;
+    border-radius: 0 0 4px 4px;
 }
 .content-example:after,
 .content-markup:after {
@@ -60,7 +63,6 @@ pre {
     padding: 9px 14px;
 }
 
-.content-php pre,
 .content-markup pre {
     background-color: transparent;
     border: none;
@@ -72,46 +74,30 @@ pre {
     background-color: #38354a;
     border-radius: 4px;
 }
-#docs-sidenav {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    top: 0;
-}
-#docs-sidenav > .nav li > a {
-    display: block;
-    padding: 4px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #767676;
-}
-#docs-sidenav > .nav li.active > a,
-#docs-sidenav > .nav li.active:focus > a,
-#docs-sidenav > .nav li.active:hover > a {
-    padding-left: 18px;
-    font-weight: 700;
-    color: #563d7c;
-    border-left: 2px solid #563d7c;
-}
-#docs-sidenav > .nav .nav li > a {padding-left: 30px;}
-#docs-sidenav > .nav .nav li.active > a {padding-left: 28px;}
-
-
-
-.navbar-default .navbar-nav>li>a:focus,
-.navbar-default .navbar-nav>li>a:hover,
-.navbar-default .navbar-nav>.active>a,
-.navbar-default .navbar-nav>.active>a:focus,
-.navbar-default .navbar-nav>.active>a:hover {
+.navbar-default .navbar-nav > .nav-item > .nav-link:focus,
+.navbar-default .navbar-nav > .nav-item > .nav-link:hover,
+.navbar-default .navbar-nav > .nav-item > .nav-link.active,
+.navbar-default .navbar-nav > .nav-item > .nav-link.active:focus,
+.navbar-default .navbar-nav > .nav-item > .nav-link.active:hover {
     background-color: #2b2838;
     color: #d2d9e5;
+}
+.navbar-expand-lg .navbar-nav .nav-link {
+    height: 56px;
+    line-height: 40px;
+    padding-right: 0.6rem;
+    padding-left: 0.6rem;
 }
 .navbar-default .navbar-brand,
 .navbar-default .navbar-brand:focus,
 .navbar-default .navbar-brand:hover,
-.navbar-default .navbar-nav>li>a,
-.navbar-default .navbar-nav>li>a:focus,
-.navbar-default .navbar-nav>li>a:hover {
+.navbar-default .navbar-nav > .nav-item > .nav-link,
+.navbar-default .navbar-nav > .nav-item > .nav-link:focus,
+.navbar-default .navbar-nav > .nav-item > .nav-link:hover {
     color: #d2d9e5;
+}
+.navbar-default .navbar-brand {
+    margin-top: -5px;
 }
 .navbar-default .navbar-toggle .icon-bar {
     background-color: #d2d9e5;
@@ -126,28 +112,54 @@ pre {
 .navbar-default .navbar-toggle:focus,
 .navbar-default .navbar-toggle:hover {
     background-color: #2b2838;
-
 }
 
+/* Sidebar */
+#docs-sidenav {
+    position: sticky;
+    top: 1rem;
+    right: 0;
+    z-index: 2;
+    height: calc(100vh - 7rem);
+    overflow-y: auto;
+}
+#docs-sidenav ul {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    display: block;
+}
+#docs-sidenav ul ul {
+    padding-left: 0
+}
+#docs-sidenav a {
+    display: block;
+    padding: 4px 15px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #767676;
+    text-decoration: none;
+}
+#docs-sidenav > .nav li > a.active,
+#docs-sidenav > .nav li:focus > a.active,
+#docs-sidenav > .nav li:hover > a.active {
+    padding-left: 12px;
+    font-weight: 700;
+    color: #563d7c;
+    border-left: 2px solid #563d7c;
+}
+#docs-sidenav > .nav li a:hover {
+    text-decoration: none;
+    background-color: #eee;
+}
+#docs-sidenav > .nav .nav li > a {padding-left: 30px;}
+#docs-sidenav > .nav .nav li > a.active {padding-left: 28px;}
 
-.queue {
-    margin-top: 30px;
+@media (min-width: 768px) {
+    header .nav-item {
+        margin: -8px 0;
+    }
 }
-.dropzone {
-    background-color: #ccc;
-    border: 3px dashed #888;
-    width: 350px;
-    height: 150px;
-    border-radius: 25px;
-    font-size: 20px;
-    color: #777;
-    padding-top: 50px;
-    text-align: center;
-}
-.dropzone.over {
-    opacity: .7;
-    border-style: solid;
-}
-#dropzone .dropzone {
-    padding-top: 60px;
+@media (min-width: 992px) {
+
 }

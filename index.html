@@ -1,711 +1,845 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>FileUp - JQuery File Upload</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FileUp - File Upload</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/github-gist.css" rel="stylesheet" type="text/css"/>
-    <link href="css/snarl.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/fileup.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/fileup.theme2.min.css" rel="stylesheet" type="text/css"/>
-    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="dist/page.min.css" rel="stylesheet"/>
+    <link href="dist/fileup.min.css" rel="stylesheet"/>
 
-    <script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
-    <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="js/highlight.pack.js" type="text/javascript"></script>
-    <script src="js/snarl.min.js" type="text/javascript"></script>
-    <script src="js/fileup.min.js" type="text/javascript"></script>
-    <script src="js/main.js" type="text/javascript"></script>
+    <script src="dist/page.min.js"></script>
+    <script src="dist/fileup.min.js"></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <script src="src/js/examples.js"></script>
 </head>
-<body data-spy="scroll" data-target="#docs-sidenav">
+<body data-bs-spy="scroll" data-bs-target="#docs-sidenav">
 
-<section class="text-left">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <header>
-                    <nav class="navbar navbar-default">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <span class="navbar-brand">FileUp</span>
+    <section class="text-left">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12  mb-5">
+                    <header>
+                        <nav class="navbar navbar-expand-lg navbar-default">
+                            <div class="container-fluid">
+                                <a class="navbar-brand" href="#">FileUp</a>
+                                
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                    <ul class="nav navbar-nav ms-auto">
+                                        <li class="nav-item"><a class="nav-link" href="https://github.com/n2ref/fileup/archive/master.zip">Download</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="https://github.com/n2ref/fileup">GitHub</a></li>
+                                    </ul>
+                                </div>
                             </div>
-
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav navbar-right">
-                                    <li><a href="https://github.com/shabuninil/fileup/archive/master.zip">Download</a></li>
-                                    <li><a href="https://github.com/shabuninil/fileup">GitHub</a></li>
+                        </nav>
+                    </header>
+                </div>
+                <div class="col-lg-2">
+                    <div id="docs-sidenav" class="hidden-xs hidden-sm hidden-md"
+                         data-bs-spy="affix" data-bs-offset-top="90" data-bs-offset-bottom="70">
+                        <ul class="nav">
+                            <li><a href="#download">Download</a></li>
+                            <li>
+                                <a href="#examples">Examples</a>
+                                <ul class="nav">
+                                    <li><a href="#example-simple">Simple upload</a></li>
+                                    <li><a href="#example-multiple">Multiple upload</a></li>
+                                    <li><a href="#example-types">Upload images</a></li>
+                                    <li><a href="#example-dropzone">Dropzone</a></li>
+                                    <li><a href="#example-uploaded">Uploaded</a></li>
+                                    <li><a href="#example-file-template">File template</a></li>
                                 </ul>
-                            </div>
-                        </div>
-                    </nav>
-                </header>
-            </div>
-            <div class="col-lg-2">
-                <div id="docs-sidenav" class="hidden-xs hidden-sm hidden-md"
-                     data-spy="affix" data-offset-top="90" data-offset-bottom="70">
-                    <ul class="nav">
-                        <li><a href="#download">Download</a></li>
-                        <li>
-                            <a href="#examples">Examples</a>
-                            <ul class="nav">
-                                <li><a href="#example-simple">Simple upload</a></li>
-                                <li><a href="#example-multiple">Multiple upload</a></li>
-                                <li><a href="#example-types">Upload images</a></li>
-                                <li><a href="#example-dropzone">Dropzone</a></li>
-                                <li><a href="#example-uploaded">Uploaded</a></li>
-                                <li><a href="#example-theme2">Theme 2</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#options">Options</a></li>
-                        <li><a href="#methods">Methods</a></li>
-                        <li><a href="#events">Events</a></li>
-                        <li><a href="#browser-compatibility">Browser compatibility</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-10">
-                <h2 id="download">Download</h2>
-                <div>
-                    <p>
-                        You can download a minimized version of the library or get the full source code at github.com.
-                    </p>
-                    <a class="btn btn-lg btn-default" href="https://github.com/shabuninil/fileup/archive/master.zip">
-                        <i class="fa fa-download"></i>
-                        Download source
-                    </a>
-
-
-                    <h2 class="section-margin">FileUp CDN</h2>
-                    <pre><code class="html">
-    &lt;!-- Latest compiled and minified CSS --&gt;
-    &lt;link href="https://cdn.rawgit.com/shabuninil/fileup/master/src/fileup.min.css" rel="stylesheet"&gt;
-
-    &lt;!-- Latest compiled and minified JavaScript --&gt;
-    &lt;script src="https://cdn.rawgit.com/shabuninil/fileup/master/src/fileup.min.js"&gt;&lt;/script&gt;
-                        </code></pre>
-                </div>
-
-
-                <h2 id="examples" class="section-margin">Examples</h2>
-                <div>
-                    <h3 id="example-simple">Simple upload</h3>
-                    <div>
-                        <div class="content-example" id="simple">
-                            <div class="btn btn-success fileup-btn">
-                                Select file
-                                <input type="file" id="upload-1">
-                            </div>
-
-                            <div id="upload-1-queue" class="queue"></div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;div class="btn btn-success fileup-btn"&gt;
-        Select file
-        &lt;input type="file" id="upload-1"&gt;
-    &lt;/div&gt;
-
-    &lt;div id="upload-1-queue""&gt;&lt;/div&gt;
-
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-1',
-            queueID: 'upload-1-queue',
-            onSuccess: function(response, file_number, file) {
-                Snarl.addNotification({
-                    title: 'Upload success',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
-                });
-            },
-            onError: function(event, file, file_number) {
-                Snarl.addNotification({
-                    title: 'Upload error',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
-                });
-            }
-        });
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h3 id="example-multiple">Multiple upload</h3>
-                    <div>
-                        <div class="content-example" id="multiple">
-                            <div class="btn btn-success fileup-btn">
-                                Select files
-                                <input type="file" id="upload-2" multiple>
-                            </div>
-
-                            <button onclick="$.fileup('upload-2', 'upload', '*')"
-                                    class="btn btn-link" type="button" style="display: none">
-                                Upload all
-                            </button>
-                            <button onclick="$.fileup('upload-2', 'remove', '*')"
-                                    type="button" class="btn btn-link" style="display: none">
-                                Remove all
-                            </button>
-
-                            <div id="upload-2-queue" class="queue"></div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;div id="multiple"&gt;
-        &lt;div class="btn btn-success fileup-btn"&gt;
-            Select files
-            &lt;input type="file" id="upload-2" multiple&gt;
-        &lt;/div&gt;
-
-        &lt;button onclick="$.fileup('upload-2', 'upload', '*')"
-                class="btn btn-link" type="button" style="display: none"&gt;
-            Upload all
-        &lt;/button&gt;
-        &lt;button onclick="$.fileup('upload-2', 'remove', '*')"
-                class="btn btn-link" type="button" style="display: none"&gt;
-            Remove all
-        &lt;/button&gt;
-
-        &lt;div id="upload-2-queue"&gt;&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-2',
-            dropzoneID: 'upload-2-dropzone',
-            queueID: 'upload-2-queue',
-            lang: 'ru',
-            onSelect: function(file) {
-                $('#multiple button').show();
-            },
-            onRemove: function(file, total) {
-                if (file === '*' || total === 1) {
-                    $('#multiple button').hide();
-                }
-            },
-            onSuccess: function(response, file_number, file) {
-                Snarl.addNotification({
-                    title: 'Upload success',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
-                });
-            },
-            onError: function(event, file, file_number) {
-                Snarl.addNotification({
-                    title: 'Upload error',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
-                });
-            }
-        });
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h3 id="example-types">Upload images</h3>
-                    <div>
-                        <div class="content-example" id="types">
-                            <div class="btn btn-success fileup-btn">
-                                Select images
-                                <input type="file" id="upload-3" multiple accept="image/*">
-                            </div>
-
-                            <div id="upload-3-queue" class="queue"></div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;div class="btn btn-success fileup-btn"&gt;
-        Select images
-        &lt;input type="file" id="upload-3" multiple accept="image/*"&gt;
-    &lt;/div&gt;
-
-    &lt;div id="upload-3-queue"&gt;&lt;/div&gt;
-
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-3',
-            queueID: 'upload-3-queue',
-            autostart: true
-        });
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h3 id="example-dropzone">Dropzone</h3>
-                    <div>
-                        <div class="content-example" id="dropzone">
-                            <input type="file" id="upload-4" multiple style="display: none">
-
-                            <div id="upload-4-dropzone" class="dropzone">
-                                Dropzone
-                            </div>
-
-                            <div id="upload-4-queue" class="queue"></div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;input type="file" id="upload-4" multiple style="display: none"&gt;
-
-    &lt;div id="upload-4-dropzone"&gt;
-        Dropzone
-    &lt;/div&gt;
-
-    &lt;div id="upload-4-queue"&gt;&lt;/div&gt;
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-4',
-            queueID: 'upload-4-queue',
-            dropzoneID: 'upload-4-dropzone'
-        })
-            .success(function(response, file_number, file) {
-                Snarl.addNotification({
-                    title: 'Upload success',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-check"&gt;&lt;/i&gt;'
-                });
-            })
-            .error(function(event, file, file_number) {
-                Snarl.addNotification({
-                    title: 'Upload error',
-                    text: file.name,
-                    icon: '&lt;i class="fa fa-times"&gt;&lt;/i&gt;'
-                });
-            })
-            .dragEnter(function(event) {
-                $(event.target).addClass('over');
-            })
-            .dragLeave(function(event) {
-                $(event.target).removeClass('over');
-            })
-            .dragEnd(function(event) {
-                $(event.target).removeClass('over');
-            });
-
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h3 id="example-uploaded">Uploaded</h3>
-                    <div>
-                        <div class="content-example" id="uploaded">
-                            <div class="btn btn-success fileup-btn">
-                                Select files
-                                <input type="file" id="upload-5" multiple>
-                            </div>
-
-                            <div id="upload-5-queue" class="queue"></div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;div class="btn btn-success fileup-btn"&gt;
-        Select files
-        &lt;input type="file" id="upload-5" multiple&gt;
-    &lt;/div&gt;
-
-    &lt;div id="upload-5-queue"&gt;&lt;/div&gt;
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-5',
-            queueID: 'upload-5-queue',
-            files: [
-                {
-                    id: 1,
-                    name: 'Cat.jpg', // required
-                    size: '254361',  // required
-                    previewUrl: 'img/preview/cat.jpg',
-                    downloadUrl: 'img/cat.jpg',
-                    customParam: '123'
-                },
-                {
-                    id: 2,
-                    name: 'Flower.jpg', // required
-                    size: '924160',     // required
-                    previewUrl: 'img/preview/flower.jpg',
-                    downloadUrl: 'img/flower.jpg',
-                    customParam: '456'
-                },
-                {
-                    name: 'FileUp.zip', // required
-                    size: '23040',      // required
-                    downloadUrl: 'https://github.com/shabuninil/fileup/archive/master.zip'
-                }
-            ]
-        });
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h3 id="example-theme2">Theme 2</h3>
-                    <div>
-                        <div class="content-example fileup-theme2" id="theme2">
-                            <div id="upload-6-queue" class="fileup-queue"></div>
-
-                            <div class="btn btn-default fileup-btn">
-                                <input type="file" id="upload-6" multiple>
-                            </div>
-                        </div>
-
-                        <div class="content-markup">
-                                <pre><code class="html">
-    &lt;link href="css/fileup.theme2.min.css" rel="stylesheet" type="text/css"/&gt;
-
-    &lt;div class="fileup-theme2"&gt;
-        &lt;div id="upload-6-queue" class="fileup-queue"&gt;&lt;/div&gt;
-
-        &lt;div class="btn btn-default fileup-btn"&gt;
-            &lt;input type="file" id="upload-6" multiple&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-
-
-    &lt;script&gt;
-        $.fileup({
-            url: '/file/upload',
-            inputID: 'upload-6',
-            queueID: 'upload-6-queue',
-            files: [
-                {
-                    id: 1,
-                    name: 'Cat.jpg', // required
-                    size: '254361',  // required
-                    previewUrl: 'img/preview/cat.jpg',
-                    downloadUrl: 'img/cat.jpg',
-                    customParam: '123'
-                },
-                {
-                    id: 2,
-                    name: 'Flower.jpg', // required
-                    size: '924160',     // required
-                    previewUrl: 'img/preview/flower.jpg',
-                    downloadUrl: 'img/flower.jpg',
-                    customParam: '456'
-                },
-                {
-                    name: 'FileUp.zip', // required
-                    size: '23040',      // required
-                    downloadUrl: 'https://github.com/shabuninil/fileup/archive/master.zip'
-                }
-            ]
-        });
-    &lt;/script&gt;</code></pre>
-                        </div>
-                    </div>
-                    <br><br>
-
-
-                    <h2 id="options" class="section-margin">Options</h2>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped js-options-table">
-                            <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>type</th>
-                                <th>default</th>
-                                <th>description</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>url</td>
-                                <td>string</td>
-                                <td><code>window.location.pathname + window.location.search</code></td>
-                                <td>The address to which the files will be downloaded</td>
-                            </tr>
-                            <tr>
-                                <td>inputID</td>
-                                <td>string</td>
-                                <td></td>
-                                <td>Item ID <code>&lt;input type="file"/&gt;</code></td>
-                            </tr>
-                            <tr>
-                                <td>queueID</td>
-                                <td>string</td>
-                                <td></td>
-                                <td>The identifier of the element in which the information about the downloaded files will be placed</td>
-                            </tr>
-                            <tr>
-                                <td>dropzoneID</td>
-                                <td>string</td>
-                                <td></td>
-                                <td>The identifier of the element that should work as a dropzone</td>
-                            </tr>
-                            <tr>
-                                <td>fieldName</td>
-                                <td>string</td>
-                                <td>filedata</td>
-                                <td>The name of the variable in which the file should be loaded</td>
-                            </tr>
-                            <tr>
-                                <td>files</td>
-                                <td>array</td>
-                                <td>[]</td>
-                                <td>Array of installed format</td>
-                            </tr>
-                            <tr>
-                                <td>extraFields</td>
-                                <td>object</td>
-                                <td>{}</td>
-                                <td>Additional variables. Which should be loaded along with the file</td>
-                            </tr>
-                            <tr>
-                                <td>lang</td>
-                                <td>string</td>
-                                <td><code>en</code></td>
-                                <td>Interface language (en/ru)</td>
-                            </tr>
-                            <tr>
-                                <td>sizeLimit</td>
-                                <td>integer</td>
-                                <td>0</td>
-                                <td>Limiting the size of uploaded files</td>
-                            </tr>
-                            <tr>
-                                <td>filesLimit</td>
-                                <td>integer</td>
-                                <td>0</td>
-                                <td>Limit the number of simultaneously selected files</td>
-                            </tr>
-                            <tr>
-                                <td>method</td>
-                                <td>string</td>
-                                <td>post</td>
-                                <td>Http method used when uploading files</td>
-                            </tr>
-                            <tr>
-                                <td>timeout</td>
-                                <td>integer</td>
-                                <td></td>
-                                <td>Timeout Limitation</td>
-                            </tr>
-                            <tr>
-                                <td>autostart</td>
-                                <td>boolean</td>
-                                <td><code>false</code></td>
-                                <td>A sign of automatic file download when it is selected</td>
-                            </tr>
-                            <tr>
-                                <td>templateFile</td>
-                                <td>string</td>
-                                <td>*</td>
-                                <td>HTML code used to generate and display information about a file</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                        <h3>Default content option "templateFile"</h3>
-                        <pre><code class="html">
-&lt;div id="fileup-[INPUT_ID]-[FILE_NUM]" class="fileup-file [TYPE]"&gt;
-    &lt;div class="fileup-preview"&gt;
-        &lt;img src="[PREVIEW_SRC]" alt="[NAME]"/&gt;
-    &lt;/div&gt;
-    &lt;div class="fileup-container"&gt;
-        &lt;div class="fileup-description"&gt;
-            &lt;span class="fileup-name"&gt;[NAME]&lt;/span&gt; (&lt;span class="fileup-size"&gt;[SIZE_HUMAN]&lt;/span&gt;)
-        &lt;/div&gt;
-        &lt;div class="fileup-controls"&gt;
-            &lt;span class="fileup-remove" onclick="$.fileup('[INPUT_ID]', 'remove', '[FILE_NUM]');" title="[REMOVE]"&gt;&lt;/span&gt;
-            &lt;span class="fileup-upload" onclick="$.fileup('[INPUT_ID]', 'upload', '[FILE_NUM]');"&gt;[UPLOAD]&lt;/span&gt;
-            &lt;span class="fileup-abort" onclick="$.fileup('[INPUT_ID]', 'abort, '[FILE_NUM]');" style="display:none"&gt;[ABORT]&lt;/span&gt;
-        &lt;/div&gt;
-        &lt;div class="fileup-result"&gt;&lt;/div&gt;
-        &lt;div class="fileup-progress"&gt;
-            &lt;div class="fileup-progress-bar"&gt;&lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class="fileup-clear"&gt;&lt;/div&gt;
-&lt;/div&gt;
-                        </code></pre>
-                    </div>
-
-
-                    <h2 id="methods" class="section-margin">Methods</h2>
-                    <div>
-                        <code>$.fileup('input_id', 'remove', 'file_num or *');</code>
-                        <p>Deleting all or specified files from the download queue</p>
-
-                        <code>$.fileup('input_id', 'upload', 'file_num or *');</code>
-                        <p>Loading all or specified files from the queue</p>
-
-                        <code>$.fileup('input_id', 'abort', 'file_num or *');</code>
-                        <p>Stop downloading all or specified files from the queue</p>
-                    </div>
-
-
-                    <h2 id="events" class="section-margin">Events</h2>
-                    <div>
-                        <table class="table table-bordered table-striped bs-events-table">
-                            <thead>
-                            <tr>
-                                <th width="160">Event name</th>
-                                <th width="160">Params</th>
-                                <th>Description</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>onSelect</td>
-                                <td>file</td>
-                                <td>This event occurs when a file is selected</td>
-                            </tr>
-                            <tr>
-                                <td>onRemove</td>
-                                <td>fil_number, total, file</td>
-                                <td>This event occurs when a file is deleted from the queue</td>
-                            </tr>
-                            <tr>
-                                <td>onBeforeStart</td>
-                                <td>file_number, xhr, file</td>
-                                <td>This event occurs before the start of the download</td>
-                            </tr>
-                            <tr>
-                                <td>onStart</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs at the beginning of the file download</td>
-                            </tr>
-                            <tr>
-                                <td>onProgress</td>
-                                <td>file_number, ProgressEvent, file</td>
-                                <td>This event occurs when the browser receives the next data packet</td>
-                            </tr>
-                            <tr>
-                                <td>onSuccess</td>
-                                <td>file_number, response, file</td>
-                                <td>This event occurs when the download is complete</td>
-                            </tr>
-                            <tr>
-                                <td>onError</td>
-                                <td>event, file, file_number, response</td>
-                                <td>This event occurs when an error occurs while loading a file</td>
-                            </tr>
-                            <tr>
-                                <td>onAbort</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when you cancel a file download</td>
-                            </tr>
-                            <tr>
-                                <td>onTimeout</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when a timeout occurs</td>
-                            </tr>
-                            <tr>
-                                <td>onFinish</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when the file is uploaded</td>
-                            </tr>
-                            <tr>
-                                <td>onDragEnter</td>
-                                <td>event</td>
-                                <td>This event occurs when a file is added to the dropzone</td>
-                            </tr>
-                            <tr>
-                                <td>onDragOver</td>
-                                <td>event</td>
-                                <td>This event occurs when the file is dragged over the dropzone</td>
-                            </tr>
-                            <tr>
-                                <td>onDragLeave</td>
-                                <td>event</td>
-                                <td>This event occurs when the file is taken out of the dropzone</td>
-                            </tr>
-                            <tr>
-                                <td>onDragEnd</td>
-                                <td>event</td>
-                                <td>This event occurs when the user finishes dragging the file over the dropzone</td>
-                            </tr>
-                            <tr>
-                                <td>onStartSystem</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs at the beginning of the file download and is needed to correctly manage the interface</td>
-                            </tr>
-                            <tr>
-                                <td>onSuccessSystem</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when the download is complete and you need to correctly control the interface</td>
-                            </tr>
-                            <tr>
-                                <td>onErrorSystem</td>
-                                <td>event, file, file_number</td>
-                                <td>This event occurs when there is a file download error and you need to correctly control the interface</td>
-                            </tr>
-                            <tr>
-                                <td>onAbortSystem</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when the file download is canceled and you need to correctly control the interface</td>
-                            </tr>
-                            <tr>
-                                <td>onTimeoutSystem</td>
-                                <td>file_number, file</td>
-                                <td>This event occurs when the timeout occurs and you need to correctly control the interface</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-
-                    <h2 id="browser-compatibility" class="section-margin">Browser compatibility</h2>
-                    <div>
-                        <p>
-                            FileUp works in most major browsers. Some details:
-                        </p>
-                        <ul>
-                            <li><b>IE: 9.</b></li>
-                            <li><b>Microsoft Edge: 12+</b></li>
-                            <li><b>Safari: 4+</b></li>
-                            <li><b>Firefox: 4+</b></li>
-                            <li><b>Chrome 14+</b></li>
-                            <li><b>Opera: 15+</b></li>
+                            </li>
+                            <li><a href="#options">Options</a></li>
+                            <li><a href="#methods">Methods</a></li>
+                            <li><a href="#events">Events</a></li>
+                            <li><a href="#sass-variables">Sass variables</a></li>
                         </ul>
                     </div>
-                    <br>
-                    <br>
+                </div>
+                <div class="col-lg-10">
+                    <h2 id="download">Download</h2>
+                    <div>
+                        <p>
+                            You can download a minimized version of the library or get the full source code at github.com.
+                        </p>
+                        <a class="btn btn-secondary" href="https://github.com/n2ref/fileup/archive/master.zip">
+                            <i class="fa fa-download"></i>
+                            Download source
+                        </a>
+
+                        <h2 class="section-margin">Install with npm</h2>
+                        <pre><code class="bash">$ npm install fileup-js</code></pre>
+
+                        <h2 class="section-margin">Требования</h2>
+                        <p>
+                            Для корректной работы на странице необходимо наличие:
+                            <a href="https://jquery.com" target="_blank">jquery</a><br>
+                            Для стилизации используется фреймворк <a href="https://getbootstrap.com/docs/5.3/">bootstrap</a>
+                        </p>
+                    </div>
+
+                    <h2 id="examples" class="section-margin">Examples</h2>
+                    <div>
+                        <h3 id="example-simple">Simple upload</h3>
+                        <div>
+                            <div class="content-example" id="simple">
+                                <div class="btn btn-success fileup-btn">
+                                    Select file
+                                    <input type="file" id="upload1">
+                                </div>
+
+                                <div id="upload1-queue" class="mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+        &lt;div class="btn btn-success fileup-btn"&gt;
+            Select file
+            &lt;input type="file" id="upload1"&gt;
+        &lt;/div&gt;
+
+        &lt;div id="upload1-queue""&gt;&lt;/div&gt;
+
+
+        &lt;script&gt;
+            fileup.create({
+                url: '/file/upload',
+                input: 'upload1',
+                queue: 'upload1-queue',
+                onSuccess: function(file, response) {
+                    alert('Upload success');
+                },
+                onError: function(errorType, options) {
+                    alert('Upload error');
+                }
+            });
+        &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h3 id="example-multiple">Multiple upload</h3>
+                        <div>
+                            <div class="content-example" id="multiple">
+                                <div class="btn btn-success fileup-btn">
+                                    Select files
+                                    <input type="file" id="upload2" multiple>
+                                </div>
+
+                                <button onclick="fileup.get('multiple').uploadAll()"
+                                        class="btn btn-link" type="button" style="display: none">
+                                    Upload all
+                                </button>
+                                <button onclick="fileup.get('multiple').removeAll()"
+                                        type="button" class="btn btn-link" style="display: none">
+                                    Remove all
+                                </button>
+
+                                <div id="upload2-queue" class="mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+        &lt;div id="multiple"&gt;
+            &lt;div class="btn btn-success fileup-btn"&gt;
+                Select files
+                &lt;input type="file" id="upload2" multiple&gt;
+            &lt;/div&gt;
+
+            &lt;button onclick="fileup.get('multiple').uploadAll()"
+                    class="btn btn-link" type="button" style="display: none"&gt;
+                Upload all
+            &lt;/button&gt;
+            &lt;button onclick="fileup.get('multiple').removeAll()"
+                    class="btn btn-link" type="button" style="display: none"&gt;
+                Remove all
+            &lt;/button&gt;
+
+            &lt;div id="upload2-queue"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;script&gt;
+            fileup.create({
+                id: 'multiple',
+                url: '/file/upload',
+                input: 'upload2',
+                queue: 'upload2-queue',
+                lang: 'en',
+                onSelect: function(file) {
+                    $('#multiple button').show();
+                },
+                onRemove: function(file) {
+                    if (Object.keys(this.getFiles()).length === 0) {
+                        $('#multiple button').hide();
+                    }
+                },
+                onSuccess: function(file, response) {
+                    alert('Upload success');
+                },
+                onError: function(errorType, options) {
+                    alert('Upload error');
+                }
+            });
+        &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h3 id="example-types">Upload images</h3>
+                        <div>
+                            <div class="content-example" id="types">
+                                <div class="btn btn-success fileup-btn">
+                                    Select images
+                                    <input type="file" id="upload3" multiple accept="image/*">
+                                </div>
+
+                                <div id="upload3-queue" class="mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+        &lt;div class="btn btn-success fileup-btn"&gt;
+            Select images
+            &lt;input type="file" id="upload3" multiple accept="image/*"&gt;
+        &lt;/div&gt;
+
+        &lt;div id="upload3-queue"&gt;&lt;/div&gt;
+
+
+        &lt;script&gt;
+            fileup.create({
+                url: '/file/upload',
+                input: 'upload3',
+                queue: 'upload3-queue',
+                autostart: true,
+                filesLimit: 3,
+                sizeLimit: 1048576 // 1 Mb
+            });
+        &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h3 id="example-dropzone">Dropzone</h3>
+                        <div>
+                            <div class="content-example" id="dropzone">
+                                <input type="file" id="upload4" multiple style="display: none">
+
+                                <div id="upload4-dropzone"
+                                     class="fileup-dropzone p-4 d-inline-block text-primary-emphasis fs-5 rounded-4 text-center">
+                                    <i class="bi bi-folder2-open"></i> Drop your files here or click
+                                    <div class="fs-6 mt-2">Maximum file size 50Mb</div>
+                                </div>
+
+                                <div id="upload4-queue" class="mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+    &lt;input type="file" id="upload4" multiple style="display: none"&gt;
+
+    &lt;div id="upload4-dropzone" class="dropzone p-4 d-inline-block text-primary-emphasis fs-5 rounded-4 text-center"&gt;
+        &lt;i class="bi bi-folder2-open"&gt;&lt;/i&gt; Drop your files here or click
+        &lt;div class="fs-6 mt-2"&gt;Maximum file size 50Mb&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id="upload4-queue"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        let fileUpDrop = fileup.create({
+            url: '/file/upload',
+            input: 'upload4',
+            queue: 'upload4-queue',
+            dropzone: 'upload4-dropzone',
+        })
+
+        fileUpDrop.on('load_success', function(file, response) {
+            alert('Upload success');
+        });
+        fileUpDrop.on('error', function(errorType, options) {
+            alert('Upload error');
+        });
+
+        fileUpDrop.on('dragEnter', function(event) {
+            console.log('dragEnter');
+        });
+        fileUpDrop.on('dragLeave', function(event) {
+            console.log('dragLeave');
+        });
+        fileUpDrop.on('dragEnd', function(event) {
+            console.log('dragEnd');
+        });
+    &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h3 id="example-uploaded">Uploaded</h3>
+                        <div>
+                            <div class="content-example" id="uploaded">
+                                <div class="btn btn-success fileup-btn">
+                                    Select files
+                                    <input type="file" id="upload5" multiple>
+                                </div>
+
+                                <div id="upload5-queue" class="mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+        &lt;div class="btn btn-success fileup-btn"&gt;
+            Select files
+            &lt;input type="file" id="upload5" multiple&gt;
+        &lt;/div&gt;
+
+        &lt;div id="upload5-queue"&gt;&lt;/div&gt;
+
+        &lt;script&gt;
+            fileup.create({
+                url: '/file/upload',
+                input: 'upload5',
+                queue: 'upload5-queue',
+                files: [
+                    {
+                        name: 'Cat.jpg',  // required
+                        size: 254361',
+                        urlPreview: 'src/img/preview/cat.jpg',
+                        urlDownload: 'img/cat.jpg',
+                    },
+                    {
+                        name: 'Flower.jpg',  // required
+                        size: 924160,
+                        urlPreview: 'src/img/preview/flower.jpg',
+                        urlDownload: 'img/flower.jpg',
+                    },
+                    {
+                        name: 'FileUp.zip',
+                        size: 23040,
+                        urlDownload: 'https://github.com/shabuninil/fileup/archive/master.zip'
+                    }
+                ]
+            });
+        &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h3 id="example-file-template">File template</h3>
+                        <div>
+                            <div class="content-example">
+                                <div class="btn btn-success fileup-btn">
+                                    Select files
+                                    <input type="file" id="upload6" multiple>
+                                </div>
+
+                                <div id="upload6-queue" class="d-flex flex-wrap gap-2 mt-3"></div>
+                            </div>
+
+                            <div class="content-markup">
+                                    <pre><code class="html">
+        &lt;div class="fileup-theme2"&gt;
+            &lt;div class="btn btn-btn-success fileup-btn"&gt;
+                Select files
+                &lt;input type="file" id="upload6" multiple&gt;
+            &lt;/div&gt;
+
+            &lt;div id="upload6-queue" class="d-flex flex-wrap gap-2 mt-3"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+
+        &lt;script&gt;
+            fileup.create({
+                url: '/file/upload',
+                input: 'upload6',
+                queue: 'upload6-queue',
+                files: [
+                    {
+                        name: 'Cat.jpg', // required
+                        size: 254361,
+                        urlPreview: 'src/img/preview/cat.jpg',
+                        urlDownload: 'img/cat.jpg',
+                    },
+                    {
+                        name: 'Flower.jpg', // required
+                        size: 924160,
+                        urlPreview: 'src/img/preview/flower.jpg',
+                        urlDownload: 'img/flower.jpg',
+                    },
+                    {
+                        name: 'FileUp.zip'
+                    }
+                ],
+                templateFile:
+                    '&lt;div style="width:125px" class="fileup-file [TYPE] mb-2 p-1 d-flex flex-column gap-2 bg-light border border-secondary-subtle rounded rounded-1"&gt;' +
+                        '&lt;div class="fileup-preview"&gt;' +
+                            '&lt;img src="[PREVIEW_SRC]" alt="[NAME]" class="border rounded"/&gt;' +
+                            '&lt;i class="fileup-icon fs-4 text-secondary"&gt;&lt;/i&gt;' +
+                        '&lt;/div&gt;' +
+                        '&lt;div class="flex-fill"&gt;' +
+                            '&lt;div class="fileup-description"&gt;' +
+                                '&lt;span class="fileup-name"&gt;[NAME]&lt;/span&gt; ' +
+                                '&lt;small class="fileup-size text-nowrap text-secondary"&gt;([SIZE])&lt;/small&gt;' +
+                            '&lt;/div&gt;' +
+                            '&lt;div class="fileup-controls mt-1 d-flex gap-2"&gt;' +
+                                '&lt;span class="fileup-remove" title="[REMOVE]"&gt;✕&lt;/span&gt;' +
+                                '&lt;span class="fileup-upload link-primary"&gt;[UPLOAD]&lt;/span&gt;' +
+                                '&lt;span class="fileup-abort link-primary" style="display:none"&gt;[ABORT]&lt;/span&gt;' +
+                            '&lt;/div&gt;' +
+                            '&lt;div class="fileup-result"&gt;&lt;/div&gt;' +
+                            '&lt;div class="fileup-progress progress mt-2 mb-1"&gt;' +
+                                '&lt;div class="fileup-progress-bar progress-bar"&gt;&lt;/div&gt;' +
+                            '&lt;/div&gt;' +
+                        '&lt;/div&gt;' +
+                    '&lt;/div&gt;'
+            });
+        &lt;/script&gt;</code></pre>
+                            </div>
+                        </div>
+                        <br><br>
+
+
+                        <h2 id="options" class="section-margin">Options</h2>
+                        <div class="mb-4 table-responsive">
+                            <table class="table table-bordered table-striped mb-4">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>type</th>
+                                    <th>default</th>
+                                    <th>description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td><code>string</code></td>
+                                    <td>uniq hash</td>
+                                    <td>Уникальный идентификатор экземпляра</td>
+                                </tr>
+                                <tr>
+                                    <td>url</td>
+                                    <td><code>string</code></td>
+                                    <td></td>
+                                    <td>Адрес, на который будут загружены файлы</td>
+                                </tr>
+                                <tr>
+                                    <td>input</td>
+                                    <td><code>HTMLElement|string</code></td>
+                                    <td></td>
+                                    <td>Идентификатор или объект с элементом <code>input[type=file]</code></td>
+                                </tr>
+                                <tr>
+                                    <td>queue</td>
+                                    <td><code>HTMLElement|string</code></td>
+                                    <td></td>
+                                    <td>Идентификатор или объект с элементом, в котором будет размещен список с файлами</td>
+                                </tr>
+                                <tr>
+                                    <td>dropzone</td>
+                                    <td><code>HTMLElement|string</code></td>
+                                    <td></td>
+                                    <td>Идентификатор или объект с элементом, в который можно перетаскивать файлы для загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>fieldName</td>
+                                    <td><code>string</code></td>
+                                    <td>file</td>
+                                    <td>Имя переменной, в которую должен быть загружен файл</td>
+                                </tr>
+                                <tr>
+                                    <td>files</td>
+                                    <td><code>array</code></td>
+                                    <td></td>
+                                    <td>Массив загруженных ранее файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>extraFields</td>
+                                    <td><code>object</code></td>
+                                    <td></td>
+                                    <td>Дополнительные переменные, которые нужно загрузить вместе с файлом</td>
+                                </tr>
+                                <tr>
+                                    <td>lang</td>
+                                    <td><code>string</code></td>
+                                    <td><code>en</code></td>
+                                    <td>Язык интерфейса, двухзначный ключ</td>
+                                </tr>
+                                <tr>
+                                    <td>langItems</td>
+                                    <td><code>object</code></td>
+                                    <td></td>
+                                    <td>Список ключевых фраз и их переводов. Может использоваться для корректировки фраз с переводом у какого либо языка или для добавления своего перевода</td>
+                                </tr>
+                                <tr>
+                                    <td>sizeLimit</td>
+                                    <td><code>integer</code></td>
+                                    <td>0</td>
+                                    <td>Ограничение размера загружаемых файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>filesLimit</td>
+                                    <td><code>integer</code></td>
+                                    <td>0</td>
+                                    <td>Ограничить количество одновременно выбранных файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>httpMethod</td>
+                                    <td><code>string</code></td>
+                                    <td>post</td>
+                                    <td>Метод HTTP, используемый при загрузке файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>timeout</td>
+                                    <td><code>integer</code></td>
+                                    <td></td>
+                                    <td>Ограничение времени ожидания при загрузке</td>
+                                </tr>
+                                <tr>
+                                    <td>autostart</td>
+                                    <td><code>boolean</code></td>
+                                    <td><code>false</code></td>
+                                    <td>Признак автоматической загрузки файла при его выборе</td>
+                                </tr>
+                                <tr>
+                                    <td>templateFile</td>
+                                    <td><code>string</code></td>
+                                    <td>*</td>
+                                    <td>HTML-код, используемый для создания и отображения информации о файле.</td>
+                                </tr>
+                                <tr>
+                                    <td>onSelect</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при выборе файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onRemove</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при удалении файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onBeforeStart</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее перед началом загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onStart</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее в начале загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onProgress</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при изменении прогресса загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onAbort</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при отмене загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onSuccess</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при успешной загрузке файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onError</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при ошибке связанной с файлом</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragEnter</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при вхождении перетаскиваемого файла в зону загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragOver</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при перетаскиваемого файла по зоне загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragLeave</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при выходе перетаскиваемого файла из зоны загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragEnd</td>
+                                    <td><code>function|string</code></td>
+                                    <td></td>
+                                    <td>Событие возникающее при завершении перетаскивания файла по зоне загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>iconDefault</td>
+                                    <td><code>string</code></td>
+                                    <td><code>bi bi-file-earmark-text</code></td>
+                                    <td>Класс иконки для файла по умолчанию</td>
+                                </tr>
+                                <tr>
+                                    <td>mimeTypes</td>
+                                    <td><code>object</code></td>
+                                    <td></td>
+                                    <td>
+                                        Список типов файлов и их расширений для определения подставляемой иконки.
+                                        Существующие типы: <code>archive, word, excel, video, audio, pdf, binary</code>. <br>
+                                        Пример: <code>pdf: { mime: ['application/pdf'], ext: ['pdf'], icon: 'bi bi-file-earmark-pdf' }</code>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <h3>Значение по умолчанию для опции "templateFile"</h3>
+                            <pre><code class="html">
+    &lt;div class="fileup-file [TYPE] mb-2 p-1 d-flex flex-nowrap gap-2 bg-light border border-secondary-subtle rounded rounded-1"&gt;
+        &lt;div class="fileup-preview"&gt;
+            &lt;img src="[PREVIEW_SRC]" alt="[NAME]" class="border rounded"/&gt;
+            &lt;i class="fileup-icon fs-4 text-secondary"&gt;&lt;/i&gt;
+        &lt;/div&gt;
+        &lt;div class="flex-fill"&gt;
+            &lt;div class="fileup-description"&gt;
+                &lt;span class="fileup-name"&gt;[NAME]&lt;/span&gt;
+                &lt;small class="fileup-size text-nowrap text-secondary"&gt;([SIZE])&lt;/small&gt;
+            &lt;/div&gt;
+
+            &lt;div class="fileup-controls mt-1 d-flex gap-2"&gt;
+                &lt;span class="fileup-remove" title="[REMOVE]"&gt;✕&lt;/span&gt;
+                &lt;span class="fileup-upload link-primary"&gt;[UPLOAD]&lt;/span&gt;
+                &lt;span class="fileup-abort link-primary" style="display:none"&gt;[ABORT]&lt;/span&gt;
+            &lt;/div&gt;
+
+            &lt;div class="fileup-result"&gt;&lt;/div&gt;
+
+            &lt;div class="fileup-progress progress mt-2 mb-1"&gt;
+                &lt;div class="fileup-progress-bar progress-bar"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+                            </code></pre>
+                        </div>
+
+
+                        <h2 id="methods" class="section-margin">Methods</h2>
+                        <div class="table-responsive mb-4">
+                            <table class="table table-bordered table-striped js-options-table">
+                                <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Return</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>let instance = fileUp.create( options )</td>
+                                    <td><code>object</code></td>
+                                    <td>Метод для создания экземпляра</td>
+                                </tr>
+                                <tr>
+                                    <td>let instance = fileUp.get( id )</td>
+                                    <td><code>object</code></td>
+                                    <td>Получение ранее созданного экземпляра</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getOptions()</td>
+                                    <td><code>object</code></td>
+                                    <td>Получение параметров</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getId()</td>
+                                    <td><code>string</code></td>
+                                    <td>Получение id</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getInput()</td>
+                                    <td><code>jQuery|null</code></td>
+                                    <td>Получение input</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getQueue()</td>
+                                    <td><code>jQuery|null</code></td>
+                                    <td>Получение queue</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getDropzone()</td>
+                                    <td><code>jQuery|null</code></td>
+                                    <td>Получение dropzone</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.on(eventName, callback, context)</td>
+                                    <td></td>
+                                    <td>Подписка на событие</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.one(eventName, callback, context)</td>
+                                    <td></td>
+                                    <td>Подписка на событие таким образом, что выполнение произойдет лишь один раз</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getLang()</td>
+                                    <td><code>object</code></td>
+                                    <td>Получение настроек языка</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getFiles()</td>
+                                    <td><code>object</code></td>
+                                    <td>Получение всех файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.getFileById( fileId )</td>
+                                    <td><code>object|null</code></td>
+                                    <td>Получение файла по его id</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.removeAll()</td>
+                                    <td></td>
+                                    <td>Удаление всех файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.uploadAll()</td>
+                                    <td></td>
+                                    <td>Загрузка всех файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>instance.abortAll()</td>
+                                    <td></td>
+                                    <td>Отмена загрузки всех файлов</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                        <h2 id="events" class="section-margin">Events</h2>
+                        <div class="mb-4">
+                            <table class="table table-bordered table-striped bs-events-table">
+                                <thead>
+                                <tr>
+                                    <th style="width:160px">Event name</th>
+                                    <th style="width:160px">Params</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>onSelect</td>
+                                    <td>file</td>
+                                    <td>Событие возникающее при выборе файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onRemove</td>
+                                    <td>file</td>
+                                    <td>Событие возникающее при удалении файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onBeforeStart</td>
+                                    <td>file, xhr</td>
+                                    <td>Событие возникающее перед началом загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onStart</td>
+                                    <td>file</td>
+                                    <td>Событие возникающее в начале загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onProgress</td>
+                                    <td>file, ProgressEvent</td>
+                                    <td>Событие возникающее при изменении прогресса загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onAbort</td>
+                                    <td>file</td>
+                                    <td>Событие возникающее при отмене загрузки файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onSuccess</td>
+                                    <td>file, response</td>
+                                    <td>Событие возникающее при успешной загрузке файла</td>
+                                </tr>
+                                <tr>
+                                    <td>onError</td>
+                                    <td>errorType, options</td>
+                                    <td>Событие возникающее при ошибке связанной с файлом</td>
+                                </tr>
+                                <tr>
+                                    <td>onFinish</td>
+                                    <td>file</td>
+                                    <td>Событие возникающее при завершении запроса, при успешном или нет</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragEnter</td>
+                                    <td>event</td>
+                                    <td>Событие возникающее при вхождении перетаскиваемого файла в зону загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragOver</td>
+                                    <td>event</td>
+                                    <td>Событие возникающее при перетаскиваемого файла по зоне загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragLeave</td>
+                                    <td>event</td>
+                                    <td>Событие возникающее при выходе перетаскиваемого файла из зоны загрузки</td>
+                                </tr>
+                                <tr>
+                                    <td>onDragEnd</td>
+                                    <td>event</td>
+                                    <td>Событие возникающее при завершении перетаскивания файла по зоне загрузки</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h2 id="sass-variables" class="section-margin">Sass variables</h2>
+                        <div class="mb-4">
+                            <div class="content-markup">
+                                <pre><code class="hljs">
+    $fileup-color-success: #4CAE4C;
+    $fileup-color-error:   #CE0000;
+    $fileup-file-width:    350px;
+
+    $fileup-dropzone-bg-color:     #f6f6ff;
+    $fileup-dropzone-border-color: #0018ff;
+    $fileup-dropzone-border-style: dashed;
+    $fileup-dropzone-border-width: 1px;
+                                </code></pre>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="buffer-content"></div>
-</section>
-
-
-<footer>
-    <section class="copyright">
-        <div class="container">
-            <span class="pull-left">&copy; 2017, shabuninil24@gmail.com</span>
-            <span class="pull-right">Code licensed under the GNU License</span>
-        </div>
+        <div class="buffer-content"></div>
     </section>
-</footer>
+
+
+    <footer>
+        <section class="copyright">
+            <div class="container">
+                <span class="float-start"></span>
+                <span class="float-end">Code licensed under the GNU License</span>
+            </div>
+        </section>
+    </footer>
 
 </body>
 </html>

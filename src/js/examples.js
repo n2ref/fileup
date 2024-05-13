@@ -96,7 +96,7 @@ $(document).ready(function() {
             {
                 name: 'FileUp.zip',
                 size: 23040,
-                urlDownload: 'https://github.com/shabuninil/fileup/archive/master.zip'
+                urlDownload: 'https://github.com/n2ref/fileup/archive/master.zip'
             }
         ]
     });

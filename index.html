@@ -108,7 +108,7 @@
 
 
         &lt;script&gt;
-            fileup.create({
+            fileUp.create({
                 url: '/file/upload',
                 input: 'upload1',
                 queue: 'upload1-queue',
@@ -133,11 +133,11 @@
                                     <input type="file" id="upload2" multiple>
                                 </div>
 
-                                <button onclick="fileup.get('multiple').uploadAll()"
+                                <button onclick="fileUp.get('multiple').uploadAll()"
                                         class="btn btn-link" type="button" style="display: none">
                                     Upload all
                                 </button>
-                                <button onclick="fileup.get('multiple').removeAll()"
+                                <button onclick="fileUp.get('multiple').removeAll()"
                                         type="button" class="btn btn-link" style="display: none">
                                     Remove all
                                 </button>
@@ -153,11 +153,11 @@
                 &lt;input type="file" id="upload2" multiple&gt;
             &lt;/div&gt;
 
-            &lt;button onclick="fileup.get('multiple').uploadAll()"
+            &lt;button onclick="fileUp.get('multiple').uploadAll()"
                     class="btn btn-link" type="button" style="display: none"&gt;
                 Upload all
             &lt;/button&gt;
-            &lt;button onclick="fileup.get('multiple').removeAll()"
+            &lt;button onclick="fileUp.get('multiple').removeAll()"
                     class="btn btn-link" type="button" style="display: none"&gt;
                 Remove all
             &lt;/button&gt;
@@ -166,7 +166,7 @@
         &lt;/div&gt;
 
         &lt;script&gt;
-            fileup.create({
+            fileUp.create({
                 id: 'multiple',
                 url: '/file/upload',
                 input: 'upload2',
@@ -215,7 +215,7 @@
 
 
         &lt;script&gt;
-            fileup.create({
+            fileUp.create({
                 url: '/file/upload',
                 input: 'upload3',
                 queue: 'upload3-queue',
@@ -255,7 +255,7 @@
     &lt;div id="upload4-queue"&gt;&lt;/div&gt;
 
     &lt;script&gt;
-        let fileUpDrop = fileup.create({
+        let fileUpDrop = fileUp.create({
             url: '/file/upload',
             input: 'upload4',
             queue: 'upload4-queue',
@@ -305,7 +305,7 @@
         &lt;div id="upload5-queue"&gt;&lt;/div&gt;
 
         &lt;script&gt;
-            fileup.create({
+            fileUp.create({
                 url: '/file/upload',
                 input: 'upload5',
                 queue: 'upload5-queue',
@@ -325,7 +325,7 @@
                     {
                         name: 'FileUp.zip',
                         size: 23040,
-                        urlDownload: 'https://github.com/shabuninil/fileup/archive/master.zip'
+                        urlDownload: 'https://github.com/n2ref/fileup/archive/master.zip'
                     }
                 ]
             });
@@ -359,7 +359,7 @@
 
 
         &lt;script&gt;
-            fileup.create({
+            fileUp.create({
                 url: '/file/upload',
                 input: 'upload6',
                 queue: 'upload6-queue',

@@ -712,16 +712,16 @@
           fileUp.getInput().click();
         });
         dropzone[0].addEventListener('dragover', function (event) {
-          that.trigger(fileUp, 'dragOver', [event]);
+          that.trigger(fileUp, 'drag_over', [event]);
         });
         dropzone[0].addEventListener('dragleave', function (event) {
-          that.trigger(fileUp, 'dragLeave', [event]);
+          that.trigger(fileUp, 'drag_leave', [event]);
         });
         dropzone[0].addEventListener('dragenter', function (event) {
-          that.trigger(fileUp, 'dragEnter', [event]);
+          that.trigger(fileUp, 'drag_enter', [event]);
         });
         dropzone[0].addEventListener('dragend', function (event) {
-          that.trigger(fileUp, 'dragEnd', [event]);
+          that.trigger(fileUp, 'drag_end', [event]);
         });
         dropzone[0].addEventListener('drop', function (event) {
           fileUp.getInput()[0].files = event.target.files || event.dataTransfer.files;
@@ -756,10 +756,10 @@
       setEvent('load_abort', fileUpEvents.onLoadAbort);
       setEvent('load_success', fileUpEvents.onSuccess);
       setEvent('error', fileUpEvents.onError);
-      setEvent('dragOver', fileUpEvents.onDragOver);
-      setEvent('dragEnter', fileUpEvents.onDragEnter);
-      setEvent('dragLeave', fileUpEvents.onDragLeave);
-      setEvent('dragEnd', fileUpEvents.onDragEnd);
+      setEvent('drag_over', fileUpEvents.onDragOver);
+      setEvent('drag_leave', fileUpEvents.onDragEnter);
+      setEvent('drag_end', fileUpEvents.onDragLeave);
+      setEvent('drag_enter', fileUpEvents.onDragEnd);
       if (options.onSelect) {
         setEvent('select', options.onSelect);
       }
@@ -788,16 +788,16 @@
         setEvent('error', options.onError);
       }
       if (options.onDragOver) {
-        setEvent('dragOver', options.onDragOver);
+        setEvent('drag_over', options.onDragOver);
       }
       if (options.onDragLeave) {
-        setEvent('dragLeave', options.onDragLeave);
+        setEvent('drag_leave', options.onDragLeave);
       }
       if (options.onDragEnd) {
-        setEvent('dragEnd', options.onDragEnd);
+        setEvent('drag_end', options.onDragEnd);
       }
       if (options.onDragEnter) {
-        setEvent('dragEnter', options.onDragEnter);
+        setEvent('drag_enter', options.onDragEnter);
       }
       fileUp.getInput().on('change', function (event) {
         that.appendFiles(fileUp, event);

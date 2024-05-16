@@ -104,430 +104,6 @@
     }
   };
 
-  var fileUpFile = {
-    _options: {
-      id: null,
-      name: null,
-      type: null,
-      size: null,
-      status: null,
-      urlPreview: null,
-      urlDownload: null
-    },
-    _id: '',
-    _status: 'stand_by',
-    _fileElement: null,
-    _fileData: null,
-    _fileUp: null,
-    _xhr: null,
-    /**
-     * Инициализация
-     * @param {object} fileUp
-     * @param {object} options
-     * @param {File}   fileData
-     * @private
-     */
-    _init: function _init(fileUp, options, fileData) {
-      if (!fileUpUtils.isObject(options)) {
-        throw new Error('File incorrect options param');
-      }
-      if (typeof options.id !== 'number' || options.id < 0) {
-        throw new Error('File dont set or incorrect id param');
-      }
-      if (typeof options.name !== 'string' || !options.name) {
-        throw new Error('File dont set name param');
-      }
-      this._fileUp = fileUp;
-      this._options = $.extend(true, {}, this._options, options);
-      this._id = this._options.id;
-      this._status = typeof this._options.status === 'string' && this._options.status ? this._options.status : 'stand_by';
-      if (fileData instanceof File) {
-        var xhr = null;
-        if (window.XMLHttpRequest) {
-          xhr = "onload" in new XMLHttpRequest() ? new XMLHttpRequest() : new XDomainRequest();
-        } else if (window.ActiveXObject) {
-          try {
-            xhr = new ActiveXObject("Msxml2.XMLHTTP");
-          } catch (e) {
-            try {
-              xhr = new ActiveXObject("Microsoft.XMLHTTP");
-            } catch (e) {
-              fileUpPrivate.trigger(fileUp, 'error', ['old_browser', {
-                file: this
-              }]);
-            }
-          }
-        } else {
-          fileUpPrivate.trigger(fileUp, 'error', ['old_browser', {
-            file: this
-          }]);
-        }
-        if (!xhr) {
-          throw new Error('xhr dont created. Check your browser');
-        }
-        this._xhr = xhr;
-        this._fileData = fileData;
-      } else {
-        this._status = 'finish';
-      }
-    },
-    /**
-     * Получение id файла
-     * @return {null}
-     */
-    getId: function getId() {
-      return this._id;
-    },
-    /**
-     * Получение name
-     * @return {string|null}
-     */
-    getName: function getName() {
-      return this._fileData ? fileUpUtils.getFileName(this._fileData) : this._options.name;
-    },
-    /**
-     * Получение элемента файла
-     * @return {jQuery|null}
-     */
-    getElement: function getElement() {
-      return this._fileElement;
-    },
-    /**
-     * Получение urlPreview
-     * @return {string|null}
-     */
-    getUrlPreview: function getUrlPreview() {
-      return this._options.urlPreview;
-    },
-    /**
-     * Получение urlDownload
-     * @return {string|null}
-     */
-    getUrlDownload: function getUrlDownload() {
-      return this._options.urlDownload;
-    },
-    /**
-     * Получение size
-     * @return {int|null}
-     */
-    getSize: function getSize() {
-      return this._fileData ? fileUpUtils.getFileSize(this._fileData) : this._options.size;
-    },
-    /**
-     * Formatting size
-     * @returns {string}
-     */
-    getSizeHuman: function getSizeHuman() {
-      var size = this.getSize();
-      return fileUpUtils.getSizeHuman(size);
-    },
-    /**
-     * Получение xhr
-     * @return {XMLHttpRequest|null}
-     */
-    getXhr: function getXhr() {
-      return this._xhr;
-    },
-    /**
-     * Получение файла
-     * @return {File|null}
-     */
-    getFileData: function getFileData() {
-      if (!(this._fileData instanceof File)) {
-        return null;
-      }
-      return this._fileData;
-    },
-    /**
-     * Получение статуса
-     * @return {string}
-     */
-    getStatus: function getStatus() {
-      return this._status;
-    },
-    /**
-     * Установка статуса
-     * @param {string} status
-     */
-    setStatus: function setStatus(status) {
-      if (typeof status !== 'string') {
-        return;
-      }
-      this._status = status;
-    },
-    /**
-     * Показ сообщения об ошибке
-     * @param {string} message
-     */
-    showError: function showError(message) {
-      if (typeof message !== 'string') {
-        return;
-      }
-      var element = this.getElement();
-      if (element) {
-        element.find('.fileup-result').removeClass('fileup-success').addClass('fileup-error').text(message);
-      }
-    },
-    /**
-     * Показ сообщения об успехе
-     * @param {string} message
-     */
-    showSuccess: function showSuccess(message) {
-      if (typeof message !== 'string') {
-        return;
-      }
-      var element = this.getElement();
-      if (element) {
-        element.find('.fileup-result').removeClass('fileup-error').addClass('fileup-success').text(message);
-      }
-    },
-    /**
-     * Удаление файла на странице и из памяти
-     */
-    remove: function remove() {
-      this.abort();
-      if (this._fileElement) {
-        this._fileElement.fadeOut('fast', function () {
-          this.remove();
-        });
-      }
-      var fileId = this.getId();
-      if (this._fileUp._files.hasOwnProperty(fileId)) {
-        delete this._fileUp._files[fileId];
-      }
-      fileUpPrivate.trigger(this._fileUp, 'remove', [this]);
-    },
-    /**
-     * Загрузка файла
-     * @return {boolean}
-     */
-    upload: function upload() {
-      var fileData = this.getFileData();
-      var xhr = this.getXhr();
-      if (!fileData || !xhr) {
-        return false;
-      }
-      var options = this._fileUp.getOptions();
-      var that = this;
-      if (typeof options.timeout === 'number') {
-        xhr.timeout = options.timeout;
-      }
-
-      // запрос начат
-      xhr.onloadstart = function () {
-        that.setStatus('load_start');
-        fileUpPrivate.trigger(that._fileUp, 'load_start', [that]);
-      };
-
-      // браузер получил очередной пакет данных
-      xhr.upload.onprogress = function (ProgressEvent) {
-        fileUpPrivate.trigger(that._fileUp, 'load_progress', [that, ProgressEvent]);
-      };
-
-      // запрос был успешно (без ошибок) завершён
-      xhr.onload = function () {
-        that.setStatus('loaded');
-        if (xhr.status === 200) {
-          fileUpPrivate.trigger(that._fileUp, 'load_success', [that, xhr.responseText]);
-        } else {
-          fileUpPrivate.trigger(that._fileUp, 'error', ['load_bad_status', {
-            file: that,
-            fileData: fileData,
-            response: xhr.responseText,
-            xhr: xhr
-          }]);
-        }
-      };
-
-      // запрос был завершён (успешно или неуспешно)
-      xhr.onloadend = function () {
-        that.setStatus('finish');
-        fileUpPrivate.trigger(that._fileUp, 'load_finish', [that]);
-      };
-
-      // запрос был отменён вызовом xhr.abort()
-      xhr.onabort = function () {
-        that.setStatus('stand_by');
-        fileUpPrivate.trigger(that._fileUp, 'load_abort', [that]);
-      };
-
-      // запрос был прекращён по таймауту
-      xhr.ontimeout = function () {
-        that.setStatus('stand_by');
-        fileUpPrivate.trigger(that._fileUp, 'error', ['load_timeout', {
-          file: that,
-          fileData: fileData
-        }]);
-      };
-
-      // произошла ошибка
-      xhr.onerror = function (event) {
-        that.setStatus('stand_by');
-        fileUpPrivate.trigger(that._fileUp, 'error', ['load_error', {
-          file: that,
-          fileData: fileData,
-          event: event
-        }]);
-      };
-      xhr.open(options.httpMethod || 'post', options.url, true);
-      xhr.setRequestHeader('Cache-Control', 'no-cache');
-      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      fileUpPrivate.trigger(that._fileUp, 'load_before_start', [that, xhr]);
-      if (window.FormData !== undefined) {
-        var formData = new FormData();
-        formData.append(options.fieldName, fileData);
-        if (Object.keys(options.extraFields).length) {
-          $.each(options.extraFields, function (name, value) {
-            formData.append(name, value);
-          });
-        }
-        return xhr.send(formData);
-      } else {
-        // IE 8,9
-        return xhr.send(fileData);
-      }
-    },
-    /**
-     * Отмена загрузки
-     */
-    abort: function abort() {
-      if (this._xhr) {
-        this._xhr.abort();
-      }
-    },
-    /**
-     * Рендер элемента
-     * @param {string} tpl
-     * @return {string|null}
-     */
-    render: function render(tpl) {
-      if (!tpl || typeof tpl !== 'string') {
-        return null;
-      }
-      var lang = this._fileUp.getLang();
-      var options = this._fileUp.getOptions();
-      var that = this;
-      var isNoPreview = false;
-      var mimeTypes = fileUpUtils.isObject(options.mimeTypes) ? options.mimeTypes : {};
-      var iconDefault = typeof options.iconDefault === 'string' ? options.iconDefault : '';
-      var showClose = typeof options.showClose === 'boolean' ? options.showClose : true;
-      var size = this.getSizeHuman();
-      var icon = null;
-      var fileType = null;
-      var fileExt = null;
-      tpl = tpl.replace(/\[ID\]/g, this.getId());
-      tpl = tpl.replace(/\[NAME\]/g, this.getName());
-      tpl = tpl.replace(/\[SIZE\]/g, size);
-      tpl = tpl.replace(/\[UPLOAD\]/g, lang.upload);
-      tpl = tpl.replace(/\[REMOVE\]/g, lang.remove);
-      tpl = tpl.replace(/\[ABORT\]/g, lang.abort);
-      if (this._fileData && this._fileData instanceof File) {
-        if (this._fileData.type && typeof this._fileData.type === 'string' && this._fileData.type.match(/^image\/.*/)) {
-          if (typeof FileReader !== 'undefined') {
-            var reader = new FileReader();
-            reader.onload = function (ProgressEvent) {
-              if (that._fileElement) {
-                var preview = that._fileElement.find('.fileup-preview');
-                preview.removeClass('no-preview').find('img').attr('src', ProgressEvent.target.result);
-              }
-            };
-            reader.readAsDataURL(this._fileData);
-          }
-          isNoPreview = true;
-          tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
-          tpl = tpl.replace(/\[TYPE\]/g, 'fileup-image fileup-no-preview');
-        } else {
-          tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
-          tpl = tpl.replace(/\[TYPE\]/g, 'fileup-doc');
-          fileType = this._fileData.type;
-          fileExt = this.getName().split('.').pop();
-        }
-      } else {
-        var urlPreview = this.getUrlPreview();
-        tpl = tpl.replace(/\[PREVIEW_SRC\]/g, urlPreview ? urlPreview : '');
-        tpl = tpl.replace(/\[TYPE\]/g, urlPreview ? 'fileup-image' : 'fileup-doc');
-        fileExt = this.getName() ? this.getName().split('.').pop() : '';
-      }
-      this._fileElement = $(tpl);
-      if (isNoPreview) {
-        this._fileElement.find('.fileup-preview').addClass('no-preview');
-      }
-      if (!size) {
-        this._fileElement.find('.fileup-size').hide();
-      }
-      if (fileType || fileExt) {
-        $.each(mimeTypes, function (name, type) {
-          if (!fileUpUtils.isObject(type) || !type.hasOwnProperty('icon') || typeof type.icon !== 'string' || type.icon === '') {
-            return;
-          }
-          if (fileType && type.hasOwnProperty('mime')) {
-            if (typeof type.mime === 'string') {
-              if (type.mime === fileType) {
-                icon = type.icon;
-                return false;
-              }
-            } else if (Array.isArray(type.mime)) {
-              $.each(type.mime, function (key, mime) {
-                if (typeof mime === 'string' && mime === fileType) {
-                  icon = type.icon;
-                  return false;
-                }
-              });
-              if (icon) {
-                return false;
-              }
-            } else if (type.mime instanceof RegExp) {
-              if (type.mime.test(fileType)) {
-                icon = type.icon;
-                return false;
-              }
-            }
-          }
-          if (fileExt && type.hasOwnProperty('ext') && Array.isArray(type.ext)) {
-            $.each(type.ext, function (key, ext) {
-              if (typeof ext === 'string' && ext === fileExt) {
-                icon = type.icon;
-                return false;
-              }
-            });
-            if (icon) {
-              return false;
-            }
-          }
-        });
-      }
-      if (!icon) {
-        icon = iconDefault;
-      }
-      this._fileElement.find('.fileup-icon').addClass(icon);
-      if (!showClose) {
-        this._fileElement.find('.fileup-remove').hide();
-      }
-      if (this.getUrlDownload()) {
-        var $name = this._fileElement.find('.fileup-name');
-        if ($name[0]) {
-          $name.replaceWith('<a href="' + this.getUrlDownload() + '" class="fileup-name" download="' + this.getName() + '">' + this.getName() + '</a>');
-        }
-      }
-      if (this._status === 'finish') {
-        this._fileElement.find('.fileup-upload').hide();
-        this._fileElement.find('.fileup-abort').hide();
-        this._fileElement.find('.fileup-progress').hide();
-      } else {
-        this._fileElement.find('.fileup-upload').click(function () {
-          that.upload();
-        });
-        this._fileElement.find('.fileup-abort').click(function () {
-          that.abort();
-        });
-      }
-      this._fileElement.find('.fileup-remove').click(function () {
-        that.remove();
-      });
-      return this._fileElement;
-    }
-  };
-
   var fileUpEvents = {
     /**
      * Событие начала загрузки
@@ -814,9 +390,7 @@
           if (!fileUpUtils.isObject(options.files[i])) {
             continue;
           }
-          options.files[i].id = fileUp._fileIndex;
-          options.files[i].status = 'loaded';
-          this.appendFileByData(fileUp, options.files[i]);
+          fileUp.appendFileByData(options.files[i]);
         }
       }
     },
@@ -910,7 +484,7 @@
             if (!multiple) {
               fileUp.removeAll();
             }
-            _this.appendFile(fileUp, file);
+            fileUp.appendFile(file);
             if (!multiple) {
               return 1; // break
             }
@@ -925,47 +499,456 @@
         input.val('');
       }
       this.trigger(fileUp, 'dragEnd', [event]);
+    }
+  };
+
+  var fileUpFile = {
+    _options: {
+      name: null,
+      size: null,
+      urlPreview: null,
+      urlDownload: null
+    },
+    _id: '',
+    _status: 'stand_by',
+    _fileElement: null,
+    _file: null,
+    _fileUp: null,
+    _xhr: null,
+    /**
+     * Инициализация
+     * @param {object} fileUp
+     * @param {int}    id
+     * @param {object} options
+     * @param {File}   file
+     * @private
+     */
+    _init: function _init(fileUp, id, options, file) {
+      if (!fileUpUtils.isObject(options)) {
+        throw new Error('File incorrect options param');
+      }
+      if (typeof id !== 'number' || id < 0) {
+        throw new Error('File dont set or incorrect id param');
+      }
+      if (typeof options.name !== 'string' || !options.name) {
+        throw new Error('File dont set name param');
+      }
+      this._fileUp = fileUp;
+      this._options = $.extend(true, {}, this._options, options);
+      this._id = id;
+      if (file instanceof File) {
+        var xhr = null;
+        if (window.XMLHttpRequest) {
+          xhr = "onload" in new XMLHttpRequest() ? new XMLHttpRequest() : new XDomainRequest();
+        } else if (window.ActiveXObject) {
+          try {
+            xhr = new ActiveXObject("Msxml2.XMLHTTP");
+          } catch (e) {
+            try {
+              xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) {
+              fileUpPrivate.trigger(fileUp, 'error', ['old_browser', {
+                file: this
+              }]);
+            }
+          }
+        } else {
+          fileUpPrivate.trigger(fileUp, 'error', ['old_browser', {
+            file: this
+          }]);
+        }
+        if (!xhr) {
+          throw new Error('xhr dont created. Check your browser');
+        }
+        this._xhr = xhr;
+        this._file = file;
+      } else {
+        this._status = 'finish';
+      }
     },
     /**
-     * Добавление файла в список из объекта File
-     * @param {object} fileUp
-     * @param {object} file
+     * Получение id файла
+     * @return {null}
      */
-    appendFile: function appendFile(fileUp, file) {
-      var options = fileUp.getOptions();
-      var fileInstance = $.extend(true, {}, fileUpFile);
-      var data = {
-        id: fileUp._fileIndex,
-        name: fileUpUtils.getFileName(file),
-        size: fileUpUtils.getFileSize(file),
-        type: file.type
+    getId: function getId() {
+      return this._id;
+    },
+    /**
+     * Получение name
+     * @return {string|null}
+     */
+    getName: function getName() {
+      return this._file ? fileUpUtils.getFileName(this._file) : this._options.name;
+    },
+    /**
+     * Получение элемента файла
+     * @return {jQuery|null}
+     */
+    getElement: function getElement() {
+      return this._fileElement;
+    },
+    /**
+     * Получение urlPreview
+     * @return {string|null}
+     */
+    getUrlPreview: function getUrlPreview() {
+      return this._options.urlPreview;
+    },
+    /**
+     * Получение urlDownload
+     * @return {string|null}
+     */
+    getUrlDownload: function getUrlDownload() {
+      return this._options.urlDownload;
+    },
+    /**
+     * Получение size
+     * @return {int|null}
+     */
+    getSize: function getSize() {
+      return this._file ? fileUpUtils.getFileSize(this._file) : this._options.size;
+    },
+    /**
+     * Formatting size
+     * @returns {string}
+     */
+    getSizeHuman: function getSizeHuman() {
+      var size = this.getSize();
+      return fileUpUtils.getSizeHuman(size);
+    },
+    /**
+     * Получение xhr
+     * @return {XMLHttpRequest|null}
+     */
+    getXhr: function getXhr() {
+      return this._xhr;
+    },
+    /**
+     * Получение файла
+     * @return {File|null}
+     */
+    getFile: function getFile() {
+      if (!(this._file instanceof File)) {
+        return null;
+      }
+      return this._file;
+    },
+    /**
+     * Получение статуса
+     * @return {string}
+     */
+    getStatus: function getStatus() {
+      return this._status;
+    },
+    /**
+     * Установка статуса
+     * @param {string} status
+     */
+    setStatus: function setStatus(status) {
+      if (typeof status !== 'string') {
+        return;
+      }
+      this._status = status;
+    },
+    /**
+     * Получение параметров
+     *
+     * @returns {object}
+     */
+    getOptions: function getOptions() {
+      return this._options;
+    },
+    /**
+     * Получение параметра
+     * @param {string} name
+     * @returns {*}
+     */
+    getOption: function getOption(name) {
+      if (typeof name !== 'string' || !this._options.hasOwnProperty(name)) {
+        return null;
+      }
+      return this._options[name];
+    },
+    /**
+     * Установка параметра
+     * @param {string} name
+     * @param {*}      value
+     */
+    setOption: function setOption(name, value) {
+      if (typeof name !== 'string') {
+        return;
+      }
+      this._options[name] = value;
+    },
+    /**
+     * Показ сообщения об ошибке
+     * @param {string} message
+     */
+    showError: function showError(message) {
+      if (typeof message !== 'string') {
+        return;
+      }
+      var element = this.getElement();
+      if (element) {
+        element.find('.fileup-result').removeClass('fileup-success').addClass('fileup-error').text(message);
+      }
+    },
+    /**
+     * Показ сообщения об успехе
+     * @param {string} message
+     */
+    showSuccess: function showSuccess(message) {
+      if (typeof message !== 'string') {
+        return;
+      }
+      var element = this.getElement();
+      if (element) {
+        element.find('.fileup-result').removeClass('fileup-error').addClass('fileup-success').text(message);
+      }
+    },
+    /**
+     * Удаление файла на странице и из памяти
+     */
+    remove: function remove() {
+      this.abort();
+      if (this._fileElement) {
+        this._fileElement.fadeOut('fast', function () {
+          this.remove();
+        });
+      }
+      var fileId = this.getId();
+      if (this._fileUp._files.hasOwnProperty(fileId)) {
+        delete this._fileUp._files[fileId];
+      }
+      fileUpPrivate.trigger(this._fileUp, 'remove', [this]);
+    },
+    /**
+     * Загрузка файла
+     * @return {boolean}
+     */
+    upload: function upload() {
+      var file = this.getFile();
+      var xhr = this.getXhr();
+      if (!file || !xhr) {
+        return false;
+      }
+      var options = this._fileUp.getOptions();
+      var that = this;
+      if (typeof options.timeout === 'number') {
+        xhr.timeout = options.timeout;
+      }
+
+      // запрос начат
+      xhr.onloadstart = function () {
+        that.setStatus('load_start');
+        fileUpPrivate.trigger(that._fileUp, 'load_start', [that]);
       };
-      fileInstance._init(fileUp, data, file);
-      fileUp._files[fileUp._fileIndex] = fileInstance;
-      var queue = fileUp.getQueue();
-      if (queue) {
-        queue.append(fileInstance.render(options.templateFile));
-      }
-      fileUp._fileIndex++;
-      if (typeof fileUp._options.autostart === 'boolean' && fileUp._options.autostart) {
-        fileInstance.upload();
+
+      // браузер получил очередной пакет данных
+      xhr.upload.onprogress = function (ProgressEvent) {
+        fileUpPrivate.trigger(that._fileUp, 'load_progress', [that, ProgressEvent]);
+      };
+
+      // запрос был успешно (без ошибок) завершён
+      xhr.onload = function () {
+        that.setStatus('loaded');
+        if (xhr.status === 200) {
+          fileUpPrivate.trigger(that._fileUp, 'load_success', [that, xhr.responseText]);
+        } else {
+          fileUpPrivate.trigger(that._fileUp, 'error', ['load_bad_status', {
+            file: that,
+            fileData: file,
+            response: xhr.responseText,
+            xhr: xhr
+          }]);
+        }
+      };
+
+      // запрос был завершён (успешно или неуспешно)
+      xhr.onloadend = function () {
+        that.setStatus('finish');
+        fileUpPrivate.trigger(that._fileUp, 'load_finish', [that]);
+      };
+
+      // запрос был отменён вызовом xhr.abort()
+      xhr.onabort = function () {
+        that.setStatus('stand_by');
+        fileUpPrivate.trigger(that._fileUp, 'load_abort', [that]);
+      };
+
+      // запрос был прекращён по таймауту
+      xhr.ontimeout = function () {
+        that.setStatus('stand_by');
+        fileUpPrivate.trigger(that._fileUp, 'error', ['load_timeout', {
+          file: that,
+          fileData: file
+        }]);
+      };
+
+      // произошла ошибка
+      xhr.onerror = function (event) {
+        that.setStatus('stand_by');
+        fileUpPrivate.trigger(that._fileUp, 'error', ['load_error', {
+          file: that,
+          fileData: file,
+          event: event
+        }]);
+      };
+      xhr.open(options.httpMethod || 'post', options.url, true);
+      xhr.setRequestHeader('Cache-Control', 'no-cache');
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      fileUpPrivate.trigger(that._fileUp, 'load_before_start', [that, xhr]);
+      if (window.FormData !== undefined) {
+        var formData = new FormData();
+        formData.append(options.fieldName, file);
+        if (Object.keys(options.extraFields).length) {
+          $.each(options.extraFields, function (name, value) {
+            formData.append(name, value);
+          });
+        }
+        return xhr.send(formData);
+      } else {
+        // IE 8,9
+        return xhr.send(file);
       }
     },
     /**
-     * Добавление файла в список из данных
-     * @param {object} fileUp
-     * @param {object} data
+     * Отмена загрузки
      */
-    appendFileByData: function appendFileByData(fileUp, data) {
-      var options = fileUp.getOptions();
-      var fileInstance = $.extend(true, {}, fileUpFile);
-      fileInstance._init(fileUp, data);
-      fileUp._files[fileUp._fileIndex] = fileInstance;
-      var queue = fileUp.getQueue();
-      if (queue) {
-        queue.append(fileInstance.render(options.templateFile));
+    abort: function abort() {
+      if (this._xhr) {
+        this._xhr.abort();
       }
-      fileUp._fileIndex++;
+    },
+    /**
+     * Рендер элемента
+     * @param {string} tpl
+     * @return {string|null}
+     */
+    render: function render(tpl) {
+      if (!tpl || typeof tpl !== 'string') {
+        return null;
+      }
+      var lang = this._fileUp.getLang();
+      var options = this._fileUp.getOptions();
+      var that = this;
+      var isNoPreview = false;
+      var mimeTypes = fileUpUtils.isObject(options.mimeTypes) ? options.mimeTypes : {};
+      var iconDefault = typeof options.iconDefault === 'string' ? options.iconDefault : '';
+      var showRemove = typeof options.showRemove === 'boolean' ? options.showRemove : true;
+      var size = this.getSizeHuman();
+      var icon = null;
+      var fileType = null;
+      var fileExt = null;
+      tpl = tpl.replace(/\[NAME\]/g, this.getName());
+      tpl = tpl.replace(/\[SIZE\]/g, size);
+      tpl = tpl.replace(/\[UPLOAD\]/g, lang.upload);
+      tpl = tpl.replace(/\[REMOVE\]/g, lang.remove);
+      tpl = tpl.replace(/\[ABORT\]/g, lang.abort);
+      if (this._file && this._file instanceof File) {
+        if (this._file.type && typeof this._file.type === 'string' && this._file.type.match(/^image\/.*/)) {
+          if (typeof FileReader !== 'undefined') {
+            var reader = new FileReader();
+            reader.onload = function (ProgressEvent) {
+              if (that._fileElement) {
+                var preview = that._fileElement.find('.fileup-preview');
+                preview.removeClass('no-preview').find('img').attr('src', ProgressEvent.target.result);
+              }
+            };
+            reader.readAsDataURL(this._file);
+          }
+          isNoPreview = true;
+          tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
+          tpl = tpl.replace(/\[TYPE\]/g, 'fileup-image fileup-no-preview');
+        } else {
+          tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
+          tpl = tpl.replace(/\[TYPE\]/g, 'fileup-doc');
+          fileType = this._file.type;
+          fileExt = this.getName().split('.').pop();
+        }
+      } else {
+        var urlPreview = this.getUrlPreview();
+        tpl = tpl.replace(/\[PREVIEW_SRC\]/g, urlPreview ? urlPreview : '');
+        tpl = tpl.replace(/\[TYPE\]/g, urlPreview ? 'fileup-image' : 'fileup-doc');
+        fileExt = this.getName() ? this.getName().split('.').pop().toLowerCase() : '';
+      }
+      this._fileElement = $(tpl);
+      if (isNoPreview) {
+        this._fileElement.find('.fileup-preview').addClass('no-preview');
+      }
+      if (!size) {
+        this._fileElement.find('.fileup-size').hide();
+      }
+      if (fileType || fileExt) {
+        $.each(mimeTypes, function (name, type) {
+          if (!fileUpUtils.isObject(type) || !type.hasOwnProperty('icon') || typeof type.icon !== 'string' || type.icon === '') {
+            return;
+          }
+          if (fileType && type.hasOwnProperty('mime')) {
+            if (typeof type.mime === 'string') {
+              if (type.mime === fileType) {
+                icon = type.icon;
+                return false;
+              }
+            } else if (Array.isArray(type.mime)) {
+              $.each(type.mime, function (key, mime) {
+                if (typeof mime === 'string' && mime === fileType) {
+                  icon = type.icon;
+                  return false;
+                }
+              });
+              if (icon) {
+                return false;
+              }
+            } else if (type.mime instanceof RegExp) {
+              if (type.mime.test(fileType)) {
+                icon = type.icon;
+                return false;
+              }
+            }
+          }
+          if (fileExt && type.hasOwnProperty('ext') && Array.isArray(type.ext)) {
+            $.each(type.ext, function (key, ext) {
+              if (typeof ext === 'string' && ext === fileExt) {
+                icon = type.icon;
+                return false;
+              }
+            });
+            if (icon) {
+              return false;
+            }
+          }
+        });
+      }
+      if (!icon) {
+        icon = iconDefault;
+      }
+      this._fileElement.find('.fileup-icon').addClass(icon);
+      if (!showRemove) {
+        this._fileElement.find('.fileup-remove').hide();
+      }
+      if (this.getUrlDownload()) {
+        var $name = this._fileElement.find('.fileup-name');
+        if ($name[0]) {
+          $name.replaceWith('<a href="' + this.getUrlDownload() + '" class="fileup-name" download="' + this.getName() + '">' + this.getName() + '</a>');
+        }
+      }
+      if (this._status === 'finish') {
+        this._fileElement.find('.fileup-upload').hide();
+        this._fileElement.find('.fileup-abort').hide();
+        this._fileElement.find('.fileup-progress').hide();
+      } else {
+        this._fileElement.find('.fileup-upload').click(function () {
+          that.upload();
+        });
+        this._fileElement.find('.fileup-abort').click(function () {
+          that.abort();
+        });
+      }
+      this._fileElement.find('.fileup-remove').click(function () {
+        that.remove();
+      });
+      return this._fileElement;
     }
   };
 
@@ -989,7 +972,7 @@
       httpMethod: 'post',
       timeout: null,
       autostart: false,
-      showClose: true,
+      showRemove: true,
       templateFile: null,
       onSelect: null,
       onRemove: null,
@@ -1021,6 +1004,11 @@
           ext: ['xls', 'xlsx'],
           icon: 'bi bi-file-earmark-excel'
         },
+        image: {
+          mime: /image\/.*/,
+          ext: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'raw', 'webp', 'heic', 'ico'],
+          icon: 'bi bi-file-earmark-image'
+        },
         video: {
           mime: /video\/.*/,
           ext: ['avi', 'mp4', 'mpeg', 'ogv', 'ts', 'webm', '3gp', '3g2', 'mkv'],
@@ -1044,6 +1032,7 @@
       }
     },
     _id: null,
+    _fileUp: null,
     _fileIndex: 0,
     _input: null,
     _queue: null,
@@ -1052,13 +1041,15 @@
     _events: {},
     /**
      * Инициализация
+     * @param {object} fileUp
      * @param {object} options
      * @private
      */
-    _init: function _init(options) {
+    _init: function _init(fileUp, options) {
       if (typeof options.url !== 'string' || !options.url) {
         throw new Error('Dont set url param');
       }
+      this._fileUp = fileUp;
       this._options = $.extend(true, {}, this._options, options);
       this._id = typeof this._options.id === 'string' && this._options.id ? this._options.id : fileUpUtils.hashCode();
       if (!this._options.templateFile || typeof this._options.templateFile !== 'string') {
@@ -1069,6 +1060,16 @@
       fileUpPrivate.initDropzone(this);
       fileUpPrivate.initEvents(this);
       fileUpPrivate.renderFiles(this);
+    },
+    /**
+     * Разрушение экземпляра
+     */
+    destruct: function destruct() {
+      var id = this.getId();
+      if (!this._fileUp._instances.hasOwnProperty(id)) {
+        return;
+      }
+      delete this._fileUp._instances[id];
     },
     /**
      * Получение параметров
@@ -1187,6 +1188,53 @@
       $.each(this._files, function (key, file) {
         file.abort();
       });
+    },
+    /**
+     * Добавление файла в список из объекта File
+     * @param {object} file
+     * @result {boolean}
+     */
+    appendFile: function appendFile(file) {
+      if (!(file instanceof File)) {
+        return false;
+      }
+      var fileInstance = $.extend(true, {}, fileUpFile);
+      var data = {
+        name: fileUpUtils.getFileName(file),
+        size: fileUpUtils.getFileSize(file),
+        type: file.type
+      };
+      fileInstance._init(this, this._fileIndex, data, file);
+      this._files[this._fileIndex] = fileInstance;
+      var queue = this.getQueue();
+      if (queue) {
+        queue.append(fileInstance.render(this._options.templateFile));
+      }
+      this._fileIndex++;
+      if (typeof this._options.autostart === 'boolean' && this._options.autostart) {
+        fileInstance.upload();
+      }
+      return true;
+    },
+    /**
+     * Добавление файла в список из данных
+     * @param {object} data
+     * @result {boolean}
+     */
+    appendFileByData: function appendFileByData(data) {
+      if (!fileUpUtils.isObject(data)) {
+        return false;
+      }
+      var fileInstance = $.extend(true, {}, fileUpFile);
+      fileInstance._init(this, this._fileIndex, data);
+      fileInstance.setStatus('finish');
+      this._files[this._fileIndex] = fileInstance;
+      var queue = this.getQueue();
+      if (queue) {
+        queue.append(fileInstance.render(this._options.templateFile));
+      }
+      this._fileIndex++;
+      return true;
     }
   };
 
@@ -1206,7 +1254,7 @@
       var langList = this.lang.hasOwnProperty(options.lang) ? this.lang[options.lang] : {};
       options.langItems = options.hasOwnProperty('langItems') && fileUpUtils.isObject(options.langItems) ? $.extend(true, {}, langList, options.langItems) : langList;
       var instance = $.extend(true, {}, fileUpInstance);
-      instance._init(options);
+      instance._init(this, options);
       var id = instance.getId();
       this._instances[id] = instance;
       return instance;

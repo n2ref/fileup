@@ -1,5 +1,6 @@
 import fileUpUtils   from './fileup.utils';
 import fileUpPrivate from './fileup.private';
+import fileUpFile    from "./fileup.file";
 import tpl           from './fileup.templates';
 
 let fileUpInstance = {
@@ -20,7 +21,7 @@ let fileUpInstance = {
         httpMethod: 'post',
         timeout: null,
         autostart: false,
-        showClose: true,
+        showRemove: true,
         templateFile: null,
 
         onSelect: null,
@@ -54,6 +55,11 @@ let fileUpInstance = {
                 ext: ['xls', 'xlsx'],
                 icon: 'bi bi-file-earmark-excel'
             },
+            image: {
+                mime: /image\/.*/,
+                ext: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'raw', 'webp', 'heic', 'ico'],
+                icon: 'bi bi-file-earmark-image'
+            },
             video: {
                 mime: /video\/.*/,
                 ext: ['avi', 'mp4', 'mpeg', 'ogv', 'ts', 'webm', '3gp', '3g2', 'mkv'],
@@ -78,6 +84,7 @@ let fileUpInstance = {
     },
 
     _id: null,
+    _fileUp: null,
     _fileIndex: 0,
     _input: null,
     _queue: null,
@@ -88,15 +95,17 @@ let fileUpInstance = {
 
     /**
      * Инициализация
+     * @param {object} fileUp
      * @param {object} options
      * @private
      */
-    _init: function (options) {
+    _init: function (fileUp, options) {
 
         if (typeof options.url !== 'string' || ! options.url) {
             throw new Error('Dont set url param');
         }
 
+        this._fileUp  = fileUp;
         this._options = $.extend(true, {}, this._options, options);
         this._id      = typeof this._options.id === 'string' && this._options.id
             ? this._options.id
@@ -113,6 +122,21 @@ let fileUpInstance = {
         fileUpPrivate.initEvents(this);
 
         fileUpPrivate.renderFiles(this);
+    },
+
+
+    /**
+     * Разрушение экземпляра
+     */
+    destruct: function () {
+
+        let id = this.getId();
+
+        if ( ! this._fileUp._instances.hasOwnProperty(id)) {
+            return;
+        }
+
+        delete this._fileUp._instances[id];
     },
 
 
@@ -264,6 +288,80 @@ let fileUpInstance = {
         $.each(this._files, function (key, file) {
             file.abort();
         });
+    },
+
+
+    /**
+     * Добавление файла в список из объекта File
+     * @param {object} file
+     * @result {boolean}
+     */
+    appendFile: function (file) {
+
+        if ( ! (file instanceof File)) {
+            return false;
+        }
+
+        let fileInstance = $.extend(true, {}, fileUpFile);
+        let data         = {
+            name: fileUpUtils.getFileName(file),
+            size: fileUpUtils.getFileSize(file),
+            type: file.type
+        };
+
+
+        fileInstance._init(this, this._fileIndex, data, file);
+
+        this._files[this._fileIndex] = fileInstance;
+
+        let queue = this.getQueue();
+        if (queue) {
+            queue.append(
+                fileInstance.render(this._options.templateFile)
+            );
+        }
+
+        this._fileIndex++;
+
+
+        if (typeof this._options.autostart === 'boolean' &&
+            this._options.autostart
+        ) {
+            fileInstance.upload();
+        }
+
+        return true;
+    },
+
+
+    /**
+     * Добавление файла в список из данных
+     * @param {object} data
+     * @result {boolean}
+     */
+    appendFileByData: function (data) {
+
+        if ( ! fileUpUtils.isObject(data)) {
+            return false;
+        }
+
+        let fileInstance = $.extend(true, {}, fileUpFile);
+
+        fileInstance._init(this, this._fileIndex, data);
+        fileInstance.setStatus('finish');
+
+        this._files[this._fileIndex] = fileInstance;
+
+        let queue = this.getQueue();
+        if (queue) {
+            queue.append(
+                fileInstance.render(this._options.templateFile)
+            );
+        }
+
+        this._fileIndex++;
+
+        return true;
     }
 }
 

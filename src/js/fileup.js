@@ -27,7 +27,7 @@ let fileUp = {
             : langList;
 
         let instance = $.extend(true, {}, fileUpInstance);
-        instance._init(options);
+        instance._init(this, options);
 
         let id = instance.getId();
         this._instances[id] = instance;

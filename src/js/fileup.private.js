@@ -1,5 +1,4 @@
 
-import fileUpFile   from "./fileup.file";
 import fileUpUtils  from "./fileup.utils";
 import fileUpEvents from "./fileup.events";
 
@@ -187,10 +186,7 @@ let fileUpPrivate = {
                     continue;
                 }
 
-                options.files[i].id     = fileUp._fileIndex
-                options.files[i].status = 'loaded'
-
-                this.appendFileByData(fileUp, options.files[i]);
+                fileUp.appendFileByData(options.files[i]);
             }
         }
     },
@@ -301,7 +297,7 @@ let fileUpPrivate = {
                     fileUp.removeAll();
                 }
 
-                this.appendFile(fileUp, file);
+                fileUp.appendFile(file);
 
                 if ( ! multiple) {
                     break;
@@ -312,70 +308,6 @@ let fileUpPrivate = {
         }
 
         this.trigger(fileUp, 'dragEnd', [event]);
-    },
-
-
-    /**
-     * Добавление файла в список из объекта File
-     * @param {object} fileUp
-     * @param {object} file
-     */
-    appendFile: function (fileUp, file) {
-
-        let options      = fileUp.getOptions();
-        let fileInstance = $.extend(true, {}, fileUpFile);
-        let data         = {
-            id:   fileUp._fileIndex,
-            name: fileUpUtils.getFileName(file),
-            size: fileUpUtils.getFileSize(file),
-            type: file.type,
-        };
-
-
-        fileInstance._init(fileUp, data, file);
-
-        fileUp._files[fileUp._fileIndex] = fileInstance;
-
-        let queue = fileUp.getQueue();
-        if (queue) {
-            queue.append(
-                fileInstance.render(options.templateFile)
-            );
-        }
-
-        fileUp._fileIndex++;
-
-
-        if (typeof fileUp._options.autostart === 'boolean' &&
-            fileUp._options.autostart
-        ) {
-            fileInstance.upload();
-        }
-    },
-
-
-    /**
-     * Добавление файла в список из данных
-     * @param {object} fileUp
-     * @param {object} data
-     */
-    appendFileByData: function (fileUp, data) {
-
-        let options      = fileUp.getOptions();
-        let fileInstance = $.extend(true, {}, fileUpFile);
-
-        fileInstance._init(fileUp, data);
-
-        fileUp._files[fileUp._fileIndex] = fileInstance;
-
-        let queue = fileUp.getQueue();
-        if (queue) {
-            queue.append(
-                fileInstance.render(options.templateFile)
-            );
-        }
-
-        fileUp._fileIndex++;
     }
 }
 

@@ -4,19 +4,16 @@ import fileUpUtils   from "./fileup.utils";
 let fileUpFile = {
 
     _options: {
-        id: null,
         name: null,
-        type: null,
         size: null,
-        status: null,
         urlPreview: null,
-        urlDownload: null,
+        urlDownload: null
     },
 
     _id: '',
     _status: 'stand_by',
     _fileElement: null,
-    _fileData: null,
+    _file: null,
     _fileUp: null,
     _xhr: null,
 
@@ -24,17 +21,18 @@ let fileUpFile = {
     /**
      * Инициализация
      * @param {object} fileUp
+     * @param {int}    id
      * @param {object} options
-     * @param {File}   fileData
+     * @param {File}   file
      * @private
      */
-    _init: function (fileUp, options, fileData) {
+    _init: function (fileUp, id, options, file) {
 
         if ( ! fileUpUtils.isObject(options)) {
             throw new Error('File incorrect options param');
         }
 
-        if (typeof options.id !== 'number' || options.id < 0) {
+        if (typeof id !== 'number' || id < 0) {
             throw new Error('File dont set or incorrect id param');
         }
         if (typeof options.name !== 'string' || ! options.name) {
@@ -43,13 +41,10 @@ let fileUpFile = {
 
         this._fileUp  = fileUp;
         this._options = $.extend(true, {}, this._options, options);
-        this._id      = this._options.id;
-        this._status  = typeof this._options.status === 'string' && this._options.status
-            ? this._options.status
-            : 'stand_by';
+        this._id      = id;
 
 
-        if (fileData instanceof File) {
+        if (file instanceof File) {
             let xhr = null;
 
             if (window.XMLHttpRequest) {
@@ -73,8 +68,8 @@ let fileUpFile = {
                 throw new Error('xhr dont created. Check your browser');
             }
 
-            this._xhr      = xhr;
-            this._fileData = fileData;
+            this._xhr  = xhr;
+            this._file = file;
 
         } else {
             this._status = 'finish';
@@ -97,8 +92,8 @@ let fileUpFile = {
      */
     getName: function () {
 
-        return this._fileData
-            ? fileUpUtils.getFileName(this._fileData)
+        return this._file
+            ? fileUpUtils.getFileName(this._file)
             : this._options.name;
     },
 
@@ -136,8 +131,8 @@ let fileUpFile = {
      */
     getSize: function () {
 
-        return this._fileData
-            ? fileUpUtils.getFileSize(this._fileData)
+        return this._file
+            ? fileUpUtils.getFileSize(this._file)
             : this._options.size;
     },
 
@@ -167,13 +162,13 @@ let fileUpFile = {
      * Получение файла
      * @return {File|null}
      */
-    getFileData: function () {
+    getFile: function () {
 
-        if ( ! (this._fileData instanceof File)) {
+        if ( ! (this._file instanceof File)) {
             return null;
         }
 
-        return this._fileData;
+        return this._file;
     },
 
 
@@ -198,6 +193,46 @@ let fileUpFile = {
         }
 
         this._status = status;
+    },
+
+
+    /**
+     * Получение параметров
+     *
+     * @returns {object}
+     */
+    getOptions: function () {
+        return this._options;
+    },
+
+
+    /**
+     * Получение параметра
+     * @param {string} name
+     * @returns {*}
+     */
+    getOption: function (name) {
+
+        if (typeof name !== 'string' || ! this._options.hasOwnProperty(name)) {
+            return null;
+        }
+
+        return this._options[name];
+    },
+
+
+    /**
+     * Установка параметра
+     * @param {string} name
+     * @param {*}      value
+     */
+    setOption: function (name, value) {
+
+        if (typeof name !== 'string') {
+            return;
+        }
+
+        this._options[name] = value;
     },
 
 
@@ -272,10 +307,10 @@ let fileUpFile = {
      */
     upload: function() {
 
-        let fileData = this.getFileData();
-        let xhr      = this.getXhr();
+        let file = this.getFile();
+        let xhr  = this.getXhr();
 
-        if ( ! fileData || ! xhr) {
+        if ( ! file || ! xhr) {
             return false;
         }
 
@@ -309,7 +344,7 @@ let fileUpFile = {
                     'load_bad_status',
                     {
                         file: that,
-                        fileData: fileData,
+                        fileData: file,
                         response: xhr.responseText,
                         xhr: xhr,
                     }
@@ -336,7 +371,7 @@ let fileUpFile = {
                 'load_timeout',
                 {
                     file: that,
-                    fileData: fileData
+                    fileData: file
                 }
             ]);
         };
@@ -348,7 +383,7 @@ let fileUpFile = {
                 'load_error',
                 {
                     file: that,
-                    fileData: fileData,
+                    fileData: file,
                     event: event
                 }
             ]);
@@ -363,7 +398,7 @@ let fileUpFile = {
 
         if (window.FormData !== undefined) {
             let formData = new FormData();
-            formData.append(options.fieldName, fileData);
+            formData.append(options.fieldName, file);
 
             if (Object.keys(options.extraFields).length) {
                 $.each(options.extraFields, function(name, value){
@@ -375,7 +410,7 @@ let fileUpFile = {
 
         } else {
             // IE 8,9
-            return xhr.send(fileData);
+            return xhr.send(file);
         }
     },
 
@@ -408,26 +443,25 @@ let fileUpFile = {
         let isNoPreview = false;
         let mimeTypes   = fileUpUtils.isObject(options.mimeTypes) ? options.mimeTypes : {};
         let iconDefault = typeof options.iconDefault === 'string' ? options.iconDefault : '';
-        let showClose   = typeof options.showClose === 'boolean' ? options.showClose : true;
+        let showRemove   = typeof options.showRemove === 'boolean' ? options.showRemove : true;
         let size        = this.getSizeHuman();
         let icon        = null;
 
         let fileType = null;
         let fileExt  = null;
 
-        tpl = tpl.replace(/\[ID\]/g,     this.getId());
         tpl = tpl.replace(/\[NAME\]/g,   this.getName());
         tpl = tpl.replace(/\[SIZE\]/g,   size);
         tpl = tpl.replace(/\[UPLOAD\]/g, lang.upload);
         tpl = tpl.replace(/\[REMOVE\]/g, lang.remove);
         tpl = tpl.replace(/\[ABORT\]/g,  lang.abort);
 
-        if (this._fileData &&
-            this._fileData instanceof File
+        if (this._file &&
+            this._file instanceof File
         ) {
-            if (this._fileData.type &&
-                typeof this._fileData.type === 'string' &&
-                this._fileData.type.match(/^image\/.*/)
+            if (this._file.type &&
+                typeof this._file.type === 'string' &&
+                this._file.type.match(/^image\/.*/)
             ) {
                 if (typeof FileReader !== 'undefined') {
                     let reader = new FileReader();
@@ -439,7 +473,7 @@ let fileUpFile = {
                                 .find('img').attr('src', ProgressEvent.target.result)
                         }
                     };
-                    reader.readAsDataURL(this._fileData);
+                    reader.readAsDataURL(this._file);
                 }
 
                 isNoPreview = true;
@@ -451,7 +485,7 @@ let fileUpFile = {
                 tpl = tpl.replace(/\[PREVIEW_SRC\]/g, '');
                 tpl = tpl.replace(/\[TYPE\]/g,        'fileup-doc');
 
-                fileType = this._fileData.type;
+                fileType = this._file.type;
                 fileExt  = this.getName().split('.').pop();
             }
 
@@ -461,7 +495,7 @@ let fileUpFile = {
             tpl = tpl.replace(/\[PREVIEW_SRC\]/g, urlPreview ? urlPreview : '');
             tpl = tpl.replace(/\[TYPE\]/g,        urlPreview ? 'fileup-image' : 'fileup-doc');
 
-            fileExt = this.getName() ? this.getName().split('.').pop() : '';
+            fileExt = this.getName() ? this.getName().split('.').pop().toLowerCase() : '';
         }
 
 
@@ -533,7 +567,7 @@ let fileUpFile = {
         this._fileElement.find('.fileup-icon').addClass(icon);
 
 
-        if ( ! showClose) {
+        if ( ! showRemove) {
             this._fileElement.find('.fileup-remove').hide();
         }
 

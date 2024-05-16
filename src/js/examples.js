@@ -2,7 +2,7 @@ $(document).ready(function() {
 
     // Simple
     fileUp.create({
-        url: '/file/upload',
+        url: '/src/file.json',
         input: 'upload1',
         queue: 'upload1-queue',
         onSuccess: function(file, response) {
@@ -17,7 +17,7 @@ $(document).ready(function() {
     // Multiple
     fileUp.create({
         id: 'multiple',
-        url: '/file/upload',
+        url: '/src/file.json',
         input: 'upload2',
         queue: 'upload2-queue',
         lang: 'en',
@@ -40,7 +40,7 @@ $(document).ready(function() {
 
     // Upload images
     fileUp.create({
-        url: '/file/upload',
+        url: '/src/file.json',
         input: 'upload3',
         queue: 'upload3-queue',
         autostart: true,
@@ -51,7 +51,7 @@ $(document).ready(function() {
 
     // Dropzone
     let fileUpDrop = fileUp.create({
-        url: '/file/upload',
+        url: '/src/file.json',
         input: 'upload4',
         queue: 'upload4-queue',
         dropzone: 'upload4-dropzone',
@@ -77,7 +77,7 @@ $(document).ready(function() {
 
     // Uploaded
     fileUp.create({
-        url: '/file/upload',
+        url: '/src/file.json',
         input: 'upload5',
         queue: 'upload5-queue',
         files: [
@@ -103,7 +103,7 @@ $(document).ready(function() {
 
     // File template
     fileUp.create({
-        url: '/file/upload',
+        url: '/src/file.json',
         input: document.getElementById('upload6'),
         queue: document.getElementById('upload6-queue'),
         files: [

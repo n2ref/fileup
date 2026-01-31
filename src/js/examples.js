@@ -21,6 +21,7 @@ $(document).ready(function() {
         input: 'upload2',
         queue: 'upload2-queue',
         lang: 'en',
+        filesUploadLimit: 2,
         onSelect: function(file) {
             $('#multiple button').show();
         },

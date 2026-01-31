@@ -221,7 +221,8 @@
                 queue: 'upload3-queue',
                 autostart: true,
                 filesLimit: 3,
-                sizeLimit: 1048576 // 1 Mb
+                sizeLimit: 1048576, // 1 Mb
+                filesUploadLimit: 10
             });
         &lt;/script&gt;</code></pre>
                             </div>
@@ -498,6 +499,12 @@
                                     <td><code>integer</code></td>
                                     <td>0</td>
                                     <td>Ограничить количество одновременно выбранных файлов</td>
+                                </tr>
+                                <tr>
+                                    <td>filesUploadLimit</td>
+                                    <td><code>integer</code></td>
+                                    <td>10</td>
+                                    <td>Ограничить количество одновременно загружаемых файлов</td>
                                 </tr>
                                 <tr>
                                     <td>httpMethod</td>

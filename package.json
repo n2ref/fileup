@@ -1,17 +1,9 @@
 {
   "name": "fileup-js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Fileup - file upload lib",
   "scripts": {
-    "build_all": "gulp build_tpl && gulp build_js_min && gulp build_js && gulp build_css_min && gulp build_css && npm run test_js",
-
-    "build_tpl": "gulp build_tpl",
-    "build_js": "gulp build_tpl && gulp build_js",
-    "build_js_min": "gulp build_tpl && gulp build_js_min",
-
-    "build_css": "gulp build_css",
-    "build_css_min": "gulp build_css_min",
-
+    "build_all": "gulp build_tpl && gulp build_js && gulp build_css && npm run test_js",
     "build_watch": "gulp build_watch",
     "build_bootstrap": "gulp build_bootstrap",
     "test_js": "eslint -c .eslintrc.json --max-warnings 100 --ext .js ./dist"

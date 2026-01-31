@@ -18,6 +18,7 @@ let fileUpInstance = {
         langItems: null,
         sizeLimit: 0,
         filesLimit: 0,
+        filesUploadLimit: 10,
         httpMethod: 'post',
         timeout: null,
         autostart: false,
@@ -89,6 +90,8 @@ let fileUpInstance = {
     _input: null,
     _queue: null,
     _dropzone: null,
+    _queueUpload: [],
+    _activeUpload: 0,
     _files: {},
     _events: {},
 
@@ -274,9 +277,13 @@ let fileUpInstance = {
      */
     uploadAll: function() {
 
+        let that = this;
+
         $.each(this._files, function (key, file) {
-            file.upload();
+            that._queueUpload.push(file);
         });
+
+        fileUpPrivate.processQueue(this);
     },
 
 
@@ -327,7 +334,8 @@ let fileUpInstance = {
         if (typeof this._options.autostart === 'boolean' &&
             this._options.autostart
         ) {
-            fileInstance.upload();
+            this._queueUpload.push(fileInstance);
+            fileUpPrivate.processQueue(this);
         }
 
         return true;

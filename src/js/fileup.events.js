@@ -1,4 +1,5 @@
 import fileUpUtils from "./fileup.utils";
+import fileUpPrivate from "./fileup.private";
 
 let fileUpEvents = {
 
@@ -77,6 +78,20 @@ let fileUpEvents = {
                 .addClass('fileup-success')
                 .text(lang.complete);
         }
+    },
+
+
+    /**
+     * Событие завершения загрузки файла
+     * @param {object} file
+     */
+    onFinish: function(file) {
+
+        if (this._activeUpload > 0) {
+            this._activeUpload--;
+        }
+
+        fileUpPrivate.processQueue(this);
     },
 
 

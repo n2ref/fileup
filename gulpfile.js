@@ -16,14 +16,12 @@ const buffer           = require("vinyl-buffer");
 var conf = {
     dist: "./dist",
     js: {
-        file: 'fileup.js',
-        fileMin: 'fileup.min.js',
+        file: 'fileup.min.js',
         main: 'src/js/main.js',
         src: 'src/js/**/*.js'
     },
     css: {
-        fileMin: 'fileup.min.css',
-        file: 'fileup.css',
+        file: 'fileup.min.css',
         main: 'src/css/main.scss',
         src: [
             'src/css/**/*.scss',
@@ -45,29 +43,48 @@ var conf = {
 
 
 
-gulp.task('build_css_min', function(){
+gulp.task('build_css', function(){
     return gulp.src(conf.css.main)
         .pipe(sourcemaps.init())
         .pipe(sass({includePaths: ['node_modules'], outputStyle: 'compressed'}).on('error', sass.logError))
-        .pipe(concat(conf.css.fileMin))
+        .pipe(concat(conf.css.file))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(conf.dist));
 });
-
-gulp.task('build_css_min_fast', function(){
-    return gulp.src(conf.css.main)
-        .pipe(sass({includePaths: ['node_modules']}).on('error', sass.logError))
-        .pipe(concat(conf.css.fileMin))
-        .pipe(gulp.dest(conf.dist));
-});
-
-gulp.task('build_css', function(){
+gulp.task('build_css_fast', function(){
     return gulp.src(conf.css.main)
         .pipe(sass({includePaths: ['node_modules']}).on('error', sass.logError))
         .pipe(concat(conf.css.file))
         .pipe(gulp.dest(conf.dist));
 });
 
+
+
+gulp.task('build_js_fast', function() {
+    return rollup({
+        input: conf.js.main,
+        output: {
+            sourcemap: false,
+            format: 'umd',
+            name: "fileUp"
+        },
+        onwarn: function (log, handler) {
+            if (log.code === 'CIRCULAR_DEPENDENCY') {
+                return; // Ignore circular dependency warnings
+            }
+            handler(log.message);
+        },
+        context: "window",
+        plugins: [
+            nodeResolve(),
+            rollupSourcemaps(),
+            rollupBabel({babelHelpers: 'bundled'}),
+        ]
+    })
+        .pipe(source(conf.js.file))
+        .pipe(buffer())
+        .pipe(gulp.dest(conf.dist));
+});
 
 
 gulp.task('build_js', function() {
@@ -87,63 +104,11 @@ gulp.task('build_js', function() {
         context: "window",
         plugins: [
             nodeResolve(),
+            rollupSourcemaps(),
             rollupBabel({babelHelpers: 'bundled'}),
         ]
     })
         .pipe(source(conf.js.file))
-        .pipe(buffer())
-        .pipe(gulp.dest(conf.dist));
-});
-
-gulp.task('build_js_min_fast', function() {
-    return rollup({
-        input: conf.js.main,
-        output: {
-            sourcemap: false,
-            format: 'umd',
-            name: "fileUp"
-        },
-        onwarn: function (log, handler) {
-            if (log.code === 'CIRCULAR_DEPENDENCY') {
-                return; // Ignore circular dependency warnings
-            }
-            handler(log.message);
-        },
-        context: "window",
-        plugins: [
-            nodeResolve(),
-            rollupSourcemaps(),
-            rollupBabel({babelHelpers: 'bundled'}),
-        ]
-    })
-        .pipe(source(conf.js.fileMin))
-        .pipe(buffer())
-        .pipe(gulp.dest(conf.dist));
-});
-
-
-gulp.task('build_js_min', function() {
-    return rollup({
-        input: conf.js.main,
-        output: {
-            sourcemap: false,
-            format: 'umd',
-            name: "fileUp"
-        },
-        onwarn: function (log, handler) {
-            if (log.code === 'CIRCULAR_DEPENDENCY') {
-                return; // Ignore circular dependency warnings
-            }
-            handler(log.message);
-        },
-        context: "window",
-        plugins: [
-            nodeResolve(),
-            rollupSourcemaps(),
-            rollupBabel({babelHelpers: 'bundled'}),
-        ]
-    })
-        .pipe(source(conf.js.fileMin))
         .pipe(buffer())
         .pipe(sourcemaps.init())
         .pipe(uglify())
@@ -178,9 +143,9 @@ gulp.task('build_bootstrap', function() {
 
 
 gulp.task('build_watch', function() {
-    gulp.watch(conf.tpl.src, gulp.series(['build_tpl', 'build_js_min_fast']));
-    gulp.watch(conf.js.src, gulp.parallel(['build_js_min_fast']));
-    gulp.watch(conf.css.src, gulp.parallel(['build_css_min_fast']));
+    gulp.watch(conf.css.src, gulp.parallel(['build_css_fast']));
+    gulp.watch(conf.tpl.src, gulp.series(['build_tpl', 'build_js_fast']));
+    gulp.watch([conf.js.src, '!' + conf.tpl.dist + '/' + conf.tpl.file], gulp.parallel(['build_js_fast']));
 });
 
-gulp.task("default", gulp.series([ 'build_tpl', 'build_js_min', 'build_js']));
+gulp.task("default", gulp.series([ 'build_tpl', 'build_css', 'build_js']));

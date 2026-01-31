@@ -144,6 +144,7 @@ let fileUpPrivate = {
         setEvent('load_start',    fileUpEvents.onLoadStart);
         setEvent('load_progress', fileUpEvents.onLoadProgress);
         setEvent('load_abort',    fileUpEvents.onLoadAbort);
+        setEvent('load_finish',   fileUpEvents.onFinish);
         setEvent('load_success',  fileUpEvents.onSuccess);
         setEvent('error',         fileUpEvents.onError);
         setEvent('drag_over',     fileUpEvents.onDragOver);
@@ -168,6 +169,26 @@ let fileUpPrivate = {
 
         fileUp.getInput().on('change', function (event) {
             that.appendFiles(fileUp, event);
+        });
+    },
+
+
+    /**
+     * Запуск очереди файлов на отправку
+     * @param {Object} fileUp
+     */
+    processQueue: function (fileUp) {
+
+        if (fileUp._queueUpload.length === 0 || fileUp._activeUpload >= fileUp._options.filesUploadLimit) {
+            return;
+        }
+
+        const availableSlots = fileUp._options.filesUploadLimit - fileUp._activeUpload;
+        const filesToUpload  = fileUp._queueUpload.splice(0, availableSlots);
+
+        filesToUpload.forEach(file => {
+            fileUp._activeUpload++;
+            file.upload();
         });
     },
 
